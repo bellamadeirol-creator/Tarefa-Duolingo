@@ -6,7 +6,9 @@
 <title>Desafio Duolingo – Madeirol</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+  [hidden]{display:none!important}
   :root{
     --verde:#58cc02; --verde-esc:#3f9a00; --verde-claro:#eafbdc;
     --amarelo:#ffb800; --amarelo-claro:#fff4d6;
@@ -143,10 +145,138 @@
     .stats{grid-template-columns:repeat(2,1fr)}
     .podio{grid-template-columns:1fr}
   }
+  /* ---------- público ---------- */
+  .pub{max-width:640px;margin:0 auto;padding:22px 16px 60px}
+  .pub-topo{text-align:center;margin-bottom:20px}
+  .pub-topo .coruja{width:72px;height:72px;border-radius:20px;background:var(--verde);display:grid;place-items:center;font-size:40px;margin:0 auto 12px;box-shadow:0 4px 0 var(--verde-esc)}
+  .pub-topo h1{margin:0;font-size:26px;font-weight:900}
+  .pub-topo p{margin:6px 0 0;color:var(--cinza);font-weight:700}
+  .tabs{display:flex;background:#fff;border-radius:14px;padding:5px;gap:5px;box-shadow:var(--sombra);margin-bottom:16px}
+  .tabs button{flex:1;border:0;background:none;padding:12px;border-radius:10px;font-weight:900;font-size:14px;color:var(--cinza);cursor:pointer}
+  .tabs button.on{background:var(--verde);color:#fff}
+  select,textarea{width:100%;padding:11px 12px;border:2px solid var(--borda);border-radius:12px;font-size:15px;font-family:inherit;font-weight:700;background:#fff;color:var(--texto)}
+  select:focus,textarea:focus{outline:none;border-color:var(--verde)}
+  .campo{margin-bottom:14px}
+  .linha3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .foto-box{border:2px dashed #bfeca0;background:#f8fdf3;border-radius:14px;padding:18px;text-align:center;cursor:pointer}
+  .foto-box img{max-width:100%;max-height:260px;border-radius:10px;margin-top:10px;display:block;margin-inline:auto}
+  .check{display:flex;gap:10px;align-items:flex-start;font-weight:700;font-size:14px;cursor:pointer}
+  .check input{width:22px;height:22px;flex-shrink:0;margin-top:1px;accent-color:var(--verde)}
+  .dica{background:#f3f8ff;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:700;color:#35506e;margin-bottom:14px}
+  .ok-tela{text-align:center;padding:30px 10px}
+  .ok-tela .big{font-size:64px}
+  .msg-erro{color:var(--vermelho);font-weight:800;font-size:14px;margin-top:10px}
+  .link-equipe{display:block;text-align:center;margin-top:26px;color:var(--cinza);font-size:13px;font-weight:800;cursor:pointer;text-decoration:underline}
+  .btn.full{width:100%;padding:14px;font-size:16px}
+  .btn:disabled{opacity:.6;cursor:wait}
+  .foto-grande{width:100%;border-radius:12px;border:2px solid var(--borda);cursor:zoom-in}
+  .atualiz{display:flex;gap:12px;align-items:center;padding:10px;border:2px solid #f0f2ec;border-radius:12px;margin-bottom:8px}
+  .atualiz img{width:64px;height:64px;object-fit:cover;border-radius:8px;cursor:zoom-in}
+  .sair{margin-top:10px;border:0;background:none;color:var(--cinza);font-weight:800;cursor:pointer;text-decoration:underline;padding:0 10px;text-align:left}
+  .carregando{text-align:center;padding:40px;color:var(--cinza);font-weight:800}
 </style>
 </head>
 <body>
-<div class="app">
+<!-- ======================= PÚBLICO ======================= -->
+<div id="vPublico" class="pub">
+  <div class="pub-topo">
+    <div class="coruja">🦉</div>
+    <h1>Desafio Duolingo Madeirol</h1>
+    <p>6 meses aprendendo um idioma — quem avançar mais casas ganha! 🏆</p>
+  </div>
+
+  <div class="tabs">
+    <button class="on" data-ptab="insc">📝 Inscrição</button>
+    <button data-ptab="prog">📈 Enviar progresso</button>
+  </div>
+
+  <!-- Inscrição -->
+  <form class="card" id="formInsc" autocomplete="on">
+    <h2>Inscrição da criança</h2>
+    <p class="ajuda">Preenchido pelo responsável. Só participa quem enviar este formulário com o print.</p>
+    <div class="campo"><label>Nome completo da criança *</label><input name="nome" required maxlength="120"></div>
+    <div class="grid">
+      <div class="campo"><label>Idade *</label><input name="idade" type="number" min="2" max="18" required></div>
+      <div class="campo"><label>Idioma *</label>
+        <select name="idioma" required><option value="">Escolha...</option><option>Inglês</option><option>Espanhol</option><option>Francês</option><option>Italiano</option><option>Alemão</option><option>Outro</option></select></div>
+    </div>
+    <div class="campo"><label>Nome do responsável *</label><input name="responsavel" required maxlength="120"></div>
+    <div class="campo"><label>WhatsApp do responsável *</label><input name="telefone" type="tel" required maxlength="30" placeholder="(21) 9...."></div>
+    <div class="campo"><label>Funcionário(a) da Madeirol ligado à criança</label><input name="funcionario" maxlength="120" placeholder="Ex.: Pablo (pai)"></div>
+    <div class="grid">
+      <div class="campo"><label>Já usava o Duolingo? *</label><select name="ja_usa" required><option value="">Escolha...</option><option>Não</option><option>Sim</option></select></div>
+      <div class="campo"><label>Usuário no Duolingo</label><input name="usuario" maxlength="60" placeholder="opcional"></div>
+    </div>
+
+    <div class="secao">Onde a criança está hoje no Duolingo</div>
+    <div class="dica">Abra o Duolingo na tela de lições. No topo aparece a <b>Seção</b> e a <b>Unidade</b>. A <b>casa</b> é a bolinha onde ela está dentro da unidade (contando de cima pra baixo). Quem está começando agora: Seção 1, Unidade 1, Casa 1.</div>
+    <div class="linha3">
+      <div class="campo"><label>Seção *</label><input name="secao" type="number" min="0" max="50" required></div>
+      <div class="campo"><label>Unidade *</label><input name="unidade" type="number" min="0" max="500" required></div>
+      <div class="campo"><label>Casa *</label><input name="casa" type="number" min="0" max="50" required></div>
+    </div>
+
+    <div class="secao">Print do início *</div>
+    <label class="foto-box" for="fotoInsc" style="text-transform:none;letter-spacing:0">
+      <div id="fotoInscTxt" style="font-size:15px;color:var(--verde-esc);font-weight:900">📷 Toque para anexar o print da tela do Duolingo</div>
+      <img id="fotoInscPrev" hidden alt="">
+    </label>
+    <input type="file" id="fotoInsc" accept="image/*" hidden>
+
+    <div class="campo" style="margin-top:18px">
+      <label class="check" style="text-transform:none;letter-spacing:0;color:var(--texto)"><input type="checkbox" name="autorizado" required>
+      Sou o responsável e autorizo a participação da criança no Desafio Duolingo e o uso destas informações pela Madeirol apenas para este desafio.</label>
+    </div>
+    <button class="btn full" type="submit" id="btnInsc">Enviar inscrição</button>
+    <div class="msg-erro" id="erroInsc"></div>
+  </form>
+
+  <!-- Progresso -->
+  <form class="card" id="formProg" hidden>
+    <h2>Enviar progresso</h2>
+    <p class="ajuda">Use quando a equipe pedir (por exemplo, no fim dos 6 meses). Use o mesmo nome e WhatsApp da inscrição.</p>
+    <div class="campo"><label>Nome completo da criança *</label><input name="nome" required maxlength="120"></div>
+    <div class="campo"><label>WhatsApp do responsável *</label><input name="telefone" type="tel" required maxlength="30"></div>
+    <div class="secao">Onde a criança está agora</div>
+    <div class="linha3">
+      <div class="campo"><label>Seção</label><input name="secao" type="number" min="0" max="50"></div>
+      <div class="campo"><label>Unidade *</label><input name="unidade" type="number" min="0" max="500" required></div>
+      <div class="campo"><label>Casa</label><input name="casa" type="number" min="0" max="50"></div>
+    </div>
+    <div class="secao">Print de agora *</div>
+    <label class="foto-box" for="fotoProg" style="text-transform:none;letter-spacing:0">
+      <div id="fotoProgTxt" style="font-size:15px;color:var(--verde-esc);font-weight:900">📷 Toque para anexar o print</div>
+      <img id="fotoProgPrev" hidden alt="">
+    </label>
+    <input type="file" id="fotoProg" accept="image/*" hidden>
+    <button class="btn full" type="submit" id="btnProg" style="margin-top:18px">Enviar progresso</button>
+    <div class="msg-erro" id="erroProg"></div>
+  </form>
+
+  <div class="card ok-tela" id="okTela" hidden>
+    <div class="big">🎉</div>
+    <h2 id="okTitulo">Inscrição enviada!</h2>
+    <p class="ajuda" id="okTexto">Agora é só estudar todo dia no Duolingo. Boa sorte! 🦉</p>
+    <button class="btn sec" onclick="voltarForm()">Enviar outra</button>
+  </div>
+
+  <a class="link-equipe" onclick="mostrar('login')">🔒 Área da equipe</a>
+</div>
+
+<!-- ======================= LOGIN ======================= -->
+<div id="vLogin" class="pub" hidden>
+  <div class="pub-topo"><div class="coruja">🔒</div><h1>Área da equipe</h1><p>Painel de controle do desafio</p></div>
+  <form class="card" id="formLogin">
+    <div class="campo"><label>E-mail</label><input name="email" type="email" required autocomplete="username"></div>
+    <div class="campo"><label>Senha</label><input name="senha" type="password" required autocomplete="current-password"></div>
+    <button class="btn full" type="submit" id="btnLogin">Entrar</button>
+    <div class="msg-erro" id="erroLogin"></div>
+  </form>
+  <a class="link-equipe" onclick="mostrar('publico')">← Voltar ao formulário</a>
+</div>
+
+<!-- ======================= PAINEL ======================= -->
+<div class="app" id="vAdmin" hidden>
   <aside>
     <div class="logo">
       <div class="coruja">🦉</div>
@@ -154,104 +284,72 @@
     </div>
     <nav>
       <button data-aba="painel" class="on"><span class="ico">🏠</span>Painel</button>
-      <button data-aba="cadastro"><span class="ico">➕</span>Cadastrar</button>
       <button data-aba="ranking"><span class="ico">🏆</span>Ranking</button>
-      <button data-aba="config"><span class="ico">⚙️</span>Configurações</button>
+      <button data-aba="envios"><span class="ico">📈</span>Progressos</button>
+      <button data-aba="divulgar"><span class="ico">📣</span>Divulgar</button>
     </nav>
-    <div class="periodo">Período do desafio<b id="periodoTxt">Não definido</b></div>
+    <div class="periodo">Logado como<b id="quem">—</b><button class="sair" onclick="sair()">Sair</button></div>
   </aside>
 
   <main>
-    <!-- ================= PAINEL ================= -->
     <section class="aba on" id="aba-painel">
       <div class="topo">
-        <div><h1>Painel de controle</h1><p>Clique numa criança para ver as informações completas</p></div>
-        <button class="btn" onclick="irPara('cadastro')">+ Nova criança</button>
+        <div><h1>Painel de controle</h1><p>As inscrições chegam aqui sozinhas. Clique numa criança para ver tudo.</p></div>
+        <button class="btn sec" onclick="carregarTudo()">🔄 Atualizar</button>
       </div>
-
       <div class="stats">
-        <div class="stat"><div class="bola" style="background:#eef1ea">👥</div><div><b id="sTotal">0</b><span>Cadastradas</span></div></div>
-        <div class="stat"><div class="bola" style="background:var(--verde-claro)">🟢</div><div><b id="sAtivas">0</b><span>Ativas</span></div></div>
-        <div class="stat"><div class="bola" style="background:var(--amarelo-claro)">🟡</div><div><b id="sPend">0</b><span>Pendentes</span></div></div>
-        <div class="stat"><div class="bola" style="background:var(--vermelho-claro)">🔴</div><div><b id="sFora">0</b><span>Não participam</span></div></div>
+        <div class="stat"><div class="bola" style="background:#eef1ea">👥</div><div><b id="sTotal">0</b><span>Inscritas</span></div></div>
+        <div class="stat"><div class="bola" style="background:var(--verde-claro)">🟢</div><div><b id="sAtivas">0</b><span>Início conferido</span></div></div>
+        <div class="stat"><div class="bola" style="background:var(--amarelo-claro)">🟡</div><div><b id="sPend">0</b><span>A conferir</span></div></div>
+        <div class="stat"><div class="bola" style="background:var(--vermelho-claro)">🔴</div><div><b id="sFora">0</b><span>Fora</span></div></div>
       </div>
-
       <div class="filtros">
-        <div class="busca"><input id="busca" placeholder="Buscar por nome ou usuário..."></div>
+        <div class="busca"><input id="busca" placeholder="Buscar por nome, responsável ou funcionário..."></div>
         <button class="chip on" data-f="todas">Todas</button>
-        <button class="chip" data-f="ativo">🟢 Ativas</button>
-        <button class="chip" data-f="pendente">🟡 Pendentes</button>
+        <button class="chip" data-f="ativo">🟢 Conferidas</button>
+        <button class="chip" data-f="pendente">🟡 A conferir</button>
         <button class="chip" data-f="fora">🔴 Fora</button>
       </div>
-
-      <div class="painel" id="painel"></div>
+      <div class="painel" id="painel"><div class="carregando">Carregando...</div></div>
     </section>
 
-    <!-- ================= CADASTRO ================= -->
-    <section class="aba" id="aba-cadastro">
-      <div class="topo"><div><h1>Cadastrar criança</h1><p>Anote onde a criança está no caminho do Duolingo hoje</p></div></div>
-      <div class="card">
-        <h2>Dados da criança</h2>
-        <p class="ajuda">Peça pra criança abrir o Duolingo na sua frente. No topo da tela de lições aparece a <b>Seção</b> e a <b>Unidade</b>; a <b>casa</b> é a bolinha onde ela está dentro da unidade (conte de cima pra baixo).</p>
-        <div class="grid">
-          <div><label>Nome *</label><input id="fNome" placeholder="Ex.: João Silva"></div>
-          <div><label>Idade</label><input id="fIdade" type="number" min="0" placeholder="Ex.: 10"></div>
-          <div><label>Responsável</label><input id="fResp" placeholder="Ex.: Maria Silva"></div>
-          <div><label>Telefone</label><input id="fTel" placeholder="(21) 9...."></div>
-          <div><label>Curso / idioma</label><input id="fCurso" placeholder="Ex.: Inglês"></div>
-          <div><label>Usuário do Duolingo (opcional)</label><input id="fUser" placeholder="Ex.: joaozinho123"></div>
-        </div>
-        <div class="secao">Ponto de partida — onde ela está hoje</div>
-        <div class="grid">
-          <div><label>Seção</label><input id="fIS" type="number" min="1" placeholder="Ex.: 1"></div>
-          <div><label>Unidade</label><input id="fIU" type="number" min="1" placeholder="Ex.: 3"></div>
-          <div><label>Casa (lição na unidade)</label><input id="fIC" type="number" min="0" placeholder="Ex.: 4"></div>
-          <div><label>XP total (opcional)</label><input id="fIX" type="number" min="0" placeholder="Ex.: 1250"></div>
-        </div>
-        <div class="acoes"><button class="btn" onclick="adicionar()">Adicionar criança</button></div>
-      </div>
-    </section>
-
-    <!-- ================= RANKING ================= -->
     <section class="aba" id="aba-ranking">
       <div class="topo">
         <div><h1>Ranking</h1><p>Quem avançou mais casas no caminho do Duolingo</p></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn" onclick="imprimir()">🖨️ Gerar relatório (PDF)</button>
+          <button class="btn" onclick="imprimir()">🖨️ Relatório (PDF)</button>
           <button class="btn sec" onclick="exportarCSV()">⬇️ Planilha (CSV)</button>
         </div>
       </div>
       <div class="podio" id="podio"></div>
       <div class="card">
         <h2>Classificação completa</h2>
-        <p class="ajuda">Entram as crianças ativas que já têm a posição final preenchida. Critério: unidades avançadas; empate → casas; depois XP.</p>
+        <p class="ajuda">Entram as crianças com início conferido e posição atual (pelo envio de progresso ou anotada pela equipe). Critério: unidades avançadas; empate → casas.</p>
         <div class="scroll"><table>
-          <thead><tr><th>#</th><th>Nome</th><th>Início</th><th>Agora / fim</th><th>Avanço</th><th>XP ganho</th></tr></thead>
+          <thead><tr><th>#</th><th>Nome</th><th>Início</th><th>Atual</th><th>Avanço</th></tr></thead>
           <tbody id="ranking"></tbody>
         </table></div>
       </div>
     </section>
 
-    <!-- ================= CONFIG ================= -->
-    <section class="aba" id="aba-config">
-      <div class="topo"><div><h1>Configurações</h1><p>Período do desafio e backup dos dados</p></div></div>
+    <section class="aba" id="aba-envios">
+      <div class="topo"><div><h1>Progressos enviados</h1><p>Tudo o que os responsáveis enviaram pela aba "Enviar progresso"</p></div></div>
+      <div class="card"><div id="listaEnvios"></div></div>
+    </section>
+
+    <section class="aba" id="aba-divulgar">
+      <div class="topo"><div><h1>Divulgar</h1><p>Mande o link do formulário no grupo</p></div></div>
       <div class="card">
-        <h2>Período do desafio</h2>
-        <p class="ajuda">Aparece no menu e no relatório final.</p>
-        <div class="grid">
-          <div><label>Data de início</label><input type="date" id="dataInicio"></div>
-          <div><label>Data de fim</label><input type="date" id="dataFim"></div>
+        <h2>Link do formulário</h2>
+        <p class="ajuda">É este mesmo site. Quem abrir vê só o formulário — o painel fica protegido pelo login.</p>
+        <input id="linkForm" readonly>
+        <div class="secao">Mensagem</div>
+        <textarea id="msgZap" rows="11"></textarea>
+        <div class="acoes">
+          <button class="btn" onclick="enviarZap()">📲 Enviar no WhatsApp</button>
+          <button class="btn sec" onclick="copiarMsg()">📋 Copiar mensagem</button>
         </div>
-      </div>
-      <div class="card">
-        <h2>Backup</h2>
-        <p class="ajuda">Os dados ficam salvos neste navegador. Salve um backup de vez em quando — o arquivo também serve para abrir em outro computador.</p>
-        <div class="acoes" style="margin-top:0">
-          <button class="btn sec" onclick="exportarJSON()">💾 Salvar backup</button>
-          <button class="btn sec" onclick="document.getElementById('arqImport').click()">📂 Carregar backup</button>
-          <input type="file" id="arqImport" accept=".json" style="display:none" onchange="importarJSON(event)">
-          <button class="btn perigo" onclick="limparTudo()">Apagar tudo</button>
-        </div>
+        <p class="ajuda" id="copiado" style="margin-top:10px"></p>
       </div>
     </section>
 
@@ -259,104 +357,216 @@
   </main>
 </div>
 
-<!-- ================= MODAL DETALHES ================= -->
+<!-- ======================= FICHA ======================= -->
 <div class="fundo-modal" id="modal" onclick="if(event.target===this)fecharModal()">
   <div class="modal">
     <div class="modal-topo">
       <div class="avatar" id="mAvatar"></div>
-      <div>
-        <h3 id="mNome"></h3>
-        <span class="status-txt" id="mStatus" style="margin-top:6px"></span>
-      </div>
+      <div><h3 id="mNome"></h3><span class="status-txt" id="mStatus" style="margin-top:6px"></span></div>
       <button class="fechar" onclick="fecharModal()">✕</button>
     </div>
     <div class="modal-corpo">
       <div class="destaque">
-        <div><b id="mIni">—</b><span>Início</span></div>
-        <div><b id="mFim">—</b><span>Agora / fim</span></div>
+        <div><b id="mIni" style="font-size:16px">—</b><span>Início</span></div>
+        <div><b id="mAtual" style="font-size:16px">—</b><span>Atual</span></div>
         <div class="g"><b id="mAvanco">—</b><span>Avanço</span></div>
       </div>
-
       <div class="secao">Informações</div>
-      <div class="grid">
-        <div><label>Nome</label><input data-c="nome"></div>
-        <div><label>Idade</label><input data-c="idade" type="number"></div>
-        <div><label>Curso / idioma</label><input data-c="curso"></div>
-        <div><label>Responsável</label><input data-c="resp"></div>
-        <div><label>Telefone</label><input data-c="tel"></div>
-        <div><label>Usuário do Duolingo</label><input data-c="usuario"></div>
-      </div>
-
-      <div class="secao">Início do desafio</div>
-        <div class="grid">
-          <div><label>Seção</label><input data-c="iS" type="number" min="1" placeholder="Ex.: 1"></div>
-          <div><label>Unidade</label><input data-c="iU" type="number" min="1" placeholder="Ex.: 3"></div>
-          <div><label>Casa (lição na unidade)</label><input data-c="iC" type="number" min="0" placeholder="Ex.: 4"></div>
-          <div><label>XP total (opcional)</label><input data-c="iX" type="number" min="0" placeholder="Ex.: 1250"></div>
-        </div>
-
-      <div class="secao">Posição atual / fim do desafio</div>
-        <div class="grid">
-          <div><label>Seção</label><input data-c="fS" type="number" min="1" placeholder="Ex.: 1"></div>
-          <div><label>Unidade</label><input data-c="fU" type="number" min="1" placeholder="Ex.: 3"></div>
-          <div><label>Casa (lição na unidade)</label><input data-c="fC" type="number" min="0" placeholder="Ex.: 4"></div>
-          <div><label>XP total (opcional)</label><input data-c="fX" type="number" min="0" placeholder="Ex.: 1250"></div>
-        </div>
-
-      <div class="secao">Observações</div>
-      <input data-c="obs" placeholder="Ex.: conferido pessoalmente dia 20/11">
-    </div>
-    <div class="modal-rodape">
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a id="mPerfil" target="_blank" rel="noopener"><button class="btn sec peq">🦉 Perfil no Duolingo</button></a>
+      <div class="grid" id="mInfo"></div>
+      <div class="secao">Print do início</div>
+      <div id="mFotoIni" class="ajuda">Carregando...</div>
+      <div class="acoes" style="margin-top:10px">
+        <button class="btn peq" id="mConferir" onclick="alternarConferido()"></button>
         <button class="btn sec peq" id="mFora" onclick="alternarFora()"></button>
       </div>
-      <button class="btn perigo peq" onclick="remover()">Remover</button>
+      <div class="secao">Progressos enviados</div>
+      <div id="mEnvios" class="ajuda"></div>
+      <div class="secao">Posição atual anotada pela equipe (opcional)</div>
+      <p class="ajuda" style="margin-top:-4px">Se preencher, vale mais que o último progresso enviado.</p>
+      <div class="linha3">
+        <div><label>Seção</label><input id="mFS" type="number"></div>
+        <div><label>Unidade</label><input id="mFU" type="number"></div>
+        <div><label>Casa</label><input id="mFC" type="number"></div>
+      </div>
+      <div class="secao">Observações</div>
+      <textarea id="mObs" rows="2"></textarea>
+      <div class="acoes"><button class="btn" onclick="salvarFicha()">💾 Salvar</button><span id="mSalvo" class="ajuda" style="margin:auto 0"></span></div>
+    </div>
+    <div class="modal-rodape">
+      <span></span>
+      <button class="btn perigo peq" onclick="remover()">Excluir inscrição</button>
     </div>
   </div>
 </div>
 
 <script>
-const CHAVE = "desafioDuolingoMadeirol_v2";
-let dados = { inicio:"", fim:"", criancas:[] };
-let filtro = "todas", aberto = null;
+const SUPABASE_URL = "https://rgdmfmorcskpiadncpon.supabase.co";
+const SUPABASE_KEY = "sb_publishable_kfjr50NvJOu7vVn_1NpgtQ_bBmNnZ-j";
+const BUCKET = "duo-fotos";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const CORES = ["#58cc02","#1cb0f6","#ff9600","#ce82ff","#ff4b4b","#2bc0a4","#ffc800","#7c6cff"];
 const $ = id => document.getElementById(id);
-const num = v => (v === "" || v == null || isNaN(Number(v))) ? null : Number(v);
-const fmt = v => v == null ? "—" : Number(v).toLocaleString("pt-BR");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmtData = d => d ? d.split("-").reverse().join("/") : "—";
+const num = v => (v === "" || v == null || isNaN(Number(v))) ? null : Number(v);
+const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim();
+const digitos = s => String(s || "").replace(/\D/g, "").slice(-9);
 const iniciais = n => (n || "?").trim().split(/\s+/).slice(0,2).map(p => p[0]).join("").toUpperCase();
-const cor = id => CORES[[...id].reduce((s,c) => s + c.charCodeAt(0), 0) % CORES.length];
+const CORES = ["#58cc02","#1cb0f6","#ff9600","#ce82ff","#ff4b4b","#2bc0a4","#ffc800","#7c6cff"];
+const cor = id => CORES[[...String(id)].reduce((s,c) => s + c.charCodeAt(0), 0) % CORES.length];
+const fmtDataHora = d => d ? new Date(d).toLocaleString("pt-BR", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "—";
 
-function carregar(){ try{ const s = localStorage.getItem(CHAVE); if(s) dados = JSON.parse(s); }catch(e){} dados.criancas = dados.criancas || []; }
-function salvar(){ try{ localStorage.setItem(CHAVE, JSON.stringify(dados)); }catch(e){} }
+/* ======================= TELAS ======================= */
+function mostrar(v){
+  $("vPublico").hidden = v !== "publico";
+  $("vLogin").hidden = v !== "login";
+  $("vAdmin").hidden = v !== "admin";
+  window.scrollTo(0,0);
+}
 
-/* posição no caminho: Seção / Unidade / Casa */
-const temPos = (c, p) => num(c[p + "U"]) !== null;
-const posTxt = (c, p) => temPos(c, p)
-  ? (num(c[p + "S"]) !== null ? "S" + c[p + "S"] + " · " : "") + "Unid. " + c[p + "U"] + (num(c[p + "C"]) !== null ? " · Casa " + c[p + "C"] : "")
-  : "—";
-function avanco(c){
-  if(!temPos(c,"i") || !temPos(c,"f")) return null;
-  return {
-    u: num(c.fU) - num(c.iU),
-    c: (num(c.fC) || 0) - (num(c.iC) || 0),
-    xp: (num(c.fX) !== null && num(c.iX) !== null) ? num(c.fX) - num(c.iX) : null
+/* ======================= FORMULÁRIO PÚBLICO ======================= */
+document.querySelectorAll("[data-ptab]").forEach(b => b.onclick = () => {
+  document.querySelectorAll("[data-ptab]").forEach(x => x.classList.toggle("on", x === b));
+  $("formInsc").hidden = b.dataset.ptab !== "insc";
+  $("formProg").hidden = b.dataset.ptab !== "prog";
+  $("okTela").hidden = true;
+});
+
+const fotos = { insc:null, prog:null };
+function prepararFoto(inputId, chave, prevId, txtId){
+  $(inputId).onchange = async e => {
+    const f = e.target.files[0]; if(!f) return;
+    try{
+      fotos[chave] = await comprimir(f);
+      $(prevId).src = URL.createObjectURL(fotos[chave]); $(prevId).hidden = false;
+      $(txtId).textContent = "✅ Print anexado (toque para trocar)";
+    }catch(err){ $(txtId).textContent = "⚠️ Não consegui abrir essa imagem. Tente outra."; fotos[chave] = null; }
   };
+}
+prepararFoto("fotoInsc","insc","fotoInscPrev","fotoInscTxt");
+prepararFoto("fotoProg","prog","fotoProgPrev","fotoProgTxt");
+
+function comprimir(file){
+  return new Promise((ok, erro) => {
+    const img = new Image();
+    img.onload = () => {
+      const max = 1600, k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob(b => b ? ok(b) : erro(), "image/jpeg", 0.82);
+    };
+    img.onerror = erro;
+    img.src = URL.createObjectURL(file);
+  });
+}
+async function enviarFoto(blob, pasta){
+  const caminho = pasta + "/" + crypto.randomUUID() + ".jpg";
+  const { error } = await sb.storage.from(BUCKET).upload(caminho, blob, { contentType:"image/jpeg" });
+  if(error) throw error;
+  return caminho;
+}
+const valForm = (form, nome) => { const v = form.elements[nome].value.trim(); return v === "" ? null : v; };
+
+$("formInsc").onsubmit = async e => {
+  e.preventDefault();
+  const f = e.target; $("erroInsc").textContent = "";
+  if(!fotos.insc){ $("erroInsc").textContent = "Anexe o print da tela do Duolingo."; return; }
+  $("btnInsc").disabled = true; $("btnInsc").textContent = "Enviando...";
+  try{
+    const foto = await enviarFoto(fotos.insc, "inicio");
+    const { error } = await sb.from("duo_inscricoes").insert({
+      nome: valForm(f,"nome"), idade: num(valForm(f,"idade")), idioma: valForm(f,"idioma"),
+      responsavel: valForm(f,"responsavel"), telefone: valForm(f,"telefone"), funcionario: valForm(f,"funcionario"),
+      ja_usa: valForm(f,"ja_usa"), usuario: (valForm(f,"usuario") || "").replace(/^@/,"") || null,
+      secao: num(valForm(f,"secao")), unidade: num(valForm(f,"unidade")), casa: num(valForm(f,"casa")),
+      foto_inicio: foto, autorizado: f.elements.autorizado.checked
+    });
+    if(error) throw error;
+    f.reset(); fotos.insc = null; $("fotoInscPrev").hidden = true; $("fotoInscTxt").textContent = "📷 Toque para anexar o print da tela do Duolingo";
+    sucesso("Inscrição enviada! 🎉", "Agora é só estudar todo dia no Duolingo. Boa sorte! 🦉");
+  }catch(err){
+    console.error(err);
+    $("erroInsc").textContent = "Não foi possível enviar. Confira os campos e a internet e tente de novo.";
+  }finally{ $("btnInsc").disabled = false; $("btnInsc").textContent = "Enviar inscrição"; }
+};
+
+$("formProg").onsubmit = async e => {
+  e.preventDefault();
+  const f = e.target; $("erroProg").textContent = "";
+  if(!fotos.prog){ $("erroProg").textContent = "Anexe o print da tela do Duolingo."; return; }
+  $("btnProg").disabled = true; $("btnProg").textContent = "Enviando...";
+  try{
+    const foto = await enviarFoto(fotos.prog, "progresso");
+    const { error } = await sb.from("duo_atualizacoes").insert({
+      nome: valForm(f,"nome"), telefone: valForm(f,"telefone"),
+      secao: num(valForm(f,"secao")), unidade: num(valForm(f,"unidade")), casa: num(valForm(f,"casa")), foto
+    });
+    if(error) throw error;
+    f.reset(); fotos.prog = null; $("fotoProgPrev").hidden = true; $("fotoProgTxt").textContent = "📷 Toque para anexar o print";
+    sucesso("Progresso enviado! 🚀", "Obrigado! A equipe vai conferir.");
+  }catch(err){
+    console.error(err);
+    $("erroProg").textContent = "Não foi possível enviar. Confira os campos e a internet e tente de novo.";
+  }finally{ $("btnProg").disabled = false; $("btnProg").textContent = "Enviar progresso"; }
+};
+function sucesso(t, x){ $("formInsc").hidden = $("formProg").hidden = true; $("okTitulo").textContent = t; $("okTexto").textContent = x; $("okTela").hidden = false; window.scrollTo(0,0); }
+function voltarForm(){ $("okTela").hidden = true; const ativa = document.querySelector("[data-ptab].on").dataset.ptab; $("formInsc").hidden = ativa !== "insc"; $("formProg").hidden = ativa !== "prog"; }
+
+/* ======================= LOGIN ======================= */
+$("formLogin").onsubmit = async e => {
+  e.preventDefault(); $("erroLogin").textContent = "";
+  $("btnLogin").disabled = true;
+  const { error } = await sb.auth.signInWithPassword({ email: e.target.email.value.trim(), password: e.target.senha.value });
+  $("btnLogin").disabled = false;
+  if(error){ $("erroLogin").textContent = "E-mail ou senha incorretos."; return; }
+  e.target.reset(); entrarPainel();
+};
+async function sair(){ await sb.auth.signOut(); mostrar("publico"); }
+
+/* ======================= PAINEL ======================= */
+let inscricoes = [], envios = [], filtro = "todas", aberta = null;
+
+async function entrarPainel(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(!session){ mostrar("login"); return; }
+  $("quem").textContent = session.user.email;
+  mostrar("admin"); prepararDivulgar(); carregarTudo();
+}
+async function carregarTudo(){
+  const [a, b] = await Promise.all([
+    sb.from("duo_inscricoes").select("*").order("nome"),
+    sb.from("duo_atualizacoes").select("*").order("criado_em", { ascending:false })
+  ]);
+  if(a.error || b.error){ $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1">⚠️ Não foi possível carregar. Seu e-mail tem acesso de administrador?</div>`; return; }
+  inscricoes = a.data; envios = b.data;
+  render();
+}
+
+/* liga cada progresso enviado à inscrição (pelo WhatsApp ou pelo nome) */
+function enviosDe(c){
+  const tel = digitos(c.telefone), n = norm(c.nome);
+  const primeiro = n.split(" ")[0];
+  return envios.filter(e => norm(e.nome) === n || (tel.length >= 8 && digitos(e.telefone) === tel && norm(e.nome).split(" ")[0] === primeiro));
+}
+function atual(c){
+  if(num(c.f_unidade) !== null) return { s:c.f_secao, u:c.f_unidade, c:c.f_casa, origem:"equipe" };
+  const e = enviosDe(c)[0];
+  return e ? { s:e.secao, u:e.unidade, c:e.casa, origem:"envio", data:e.criado_em } : null;
+}
+const posTxt = p => (!p || num(p.u) === null) ? "—" : (num(p.s) !== null ? "S" + p.s + " · " : "") + "Unid. " + p.u + (num(p.c) !== null ? " · Casa " + p.c : "");
+const inicio = c => ({ s:c.secao, u:c.unidade, c:c.casa });
+function avanco(c){
+  const a = atual(c); if(!a || num(c.unidade) === null) return null;
+  return { u: num(a.u) - num(c.unidade), c: (num(a.c) || 0) - (num(c.casa) || 0) };
 }
 function avancoTxt(a){
   if(!a) return "—";
   if(a.u === 0) return (a.c > 0 ? "+" : "") + a.c + (Math.abs(a.c) === 1 ? " casa" : " casas");
   return (a.u > 0 ? "+" : "") + a.u + (Math.abs(a.u) === 1 ? " unidade" : " unidades");
 }
-const xpTxt = a => (!a || a.xp === null) ? "—" : (a.xp > 0 ? "+" : "") + fmt(a.xp);
+const status = c => c.fora ? "fora" : c.conferido ? "ativo" : "pendente";
+const NOME_ST = { ativo:"Início conferido", pendente:"A conferir", fora:"Fora do desafio" };
 
-function status(c){ if(c.fora) return "fora"; return temPos(c,"i") ? "ativo" : "pendente"; }
-const NOME_ST = { ativo:"Ativa", pendente:"Pendente", fora:"Não participa" };
-
-/* ---------- abas ---------- */
 function irPara(aba){
   document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.aba === aba));
   document.querySelectorAll(".aba").forEach(s => s.classList.toggle("on", s.id === "aba-" + aba));
@@ -364,189 +574,180 @@ function irPara(aba){
 }
 document.querySelectorAll("nav button").forEach(b => b.onclick = () => irPara(b.dataset.aba));
 document.querySelectorAll(".chip").forEach(ch => ch.onclick = () => {
-  filtro = ch.dataset.f;
-  document.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === ch));
-  renderPainel();
+  filtro = ch.dataset.f; document.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === ch)); renderPainel();
 });
-$("busca").oninput = renderPainel;
+$("busca").oninput = () => renderPainel();
 
-/* ---------- cadastro ---------- */
-const CAMPOS_CAD = ["fNome","fUser","fIdade","fResp","fTel","fCurso","fIS","fIU","fIC","fIX"];
-function adicionar(){
-  const nome = $("fNome").value.trim();
-  if(!nome){ $("fNome").focus(); return; }
-  dados.criancas.push({
-    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
-    nome, usuario: $("fUser").value.trim().replace(/^@/,""), idade: $("fIdade").value,
-    resp: $("fResp").value.trim(), tel: $("fTel").value.trim(), curso: $("fCurso").value.trim(),
-    iS: $("fIS").value, iU: $("fIU").value, iC: $("fIC").value, iX: $("fIX").value,
-    fS:"", fU:"", fC:"", fX:"", obs:"", fora:false
-  });
-  CAMPOS_CAD.forEach(i => $(i).value = "");
-  salvar(); render(); irPara("painel");
-}
-
-/* ---------- painel ---------- */
+function render(){ renderResumo(); renderPainel(); renderRanking(); renderEnvios(); }
 function renderResumo(){
-  const st = dados.criancas.map(status);
+  const st = inscricoes.map(status);
   $("sTotal").textContent = st.length;
   $("sAtivas").textContent = st.filter(s => s === "ativo").length;
   $("sPend").textContent = st.filter(s => s === "pendente").length;
   $("sFora").textContent = st.filter(s => s === "fora").length;
-  $("periodoTxt").textContent = dados.inicio ? fmtData(dados.inicio) + " → " + fmtData(dados.fim) : "Não definido";
 }
 function renderPainel(){
-  const q = $("busca").value.trim().toLowerCase();
-  const lista = dados.criancas.filter(c =>
-    (filtro === "todas" || status(c) === filtro) &&
-    (!q || c.nome.toLowerCase().includes(q) || (c.usuario||"").toLowerCase().includes(q))
-  ).sort((a,b) => a.nome.localeCompare(b.nome, "pt-BR"));
-
-  if(!dados.criancas.length){
-    $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1"><div class="big">🦉</div>Nenhuma criança cadastrada ainda.<br><br><button class="btn" onclick="irPara('cadastro')">Cadastrar a primeira</button></div>`;
-    return;
-  }
+  const q = norm($("busca").value);
+  const lista = inscricoes.filter(c => (filtro === "todas" || status(c) === filtro) &&
+    (!q || [c.nome, c.responsavel, c.funcionario].some(v => norm(v).includes(q))));
+  if(!inscricoes.length){ $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1"><div class="big">🦉</div>Nenhuma inscrição ainda.<br>Mande o link na aba <b>Divulgar</b>.</div>`; return; }
   if(!lista.length){ $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1">Ninguém encontrado com esse filtro.</div>`; return; }
-
   $("painel").innerHTML = lista.map(c => {
-    const s = status(c), a = avanco(c);
+    const s = status(c), a = avanco(c), at = atual(c);
     return `<div class="pessoa" onclick="abrir('${c.id}')">
       <span class="ponto ${s}" title="${NOME_ST[s]}"></span>
       <div class="linha1">
         <div class="avatar" style="background:${cor(c.id)}">${esc(iniciais(c.nome))}</div>
         <div style="min-width:0;padding-right:18px">
           <div class="nome">${esc(c.nome)}</div>
-          <div class="user">${c.idade ? esc(c.idade) + " anos" : ""}${c.idade && c.curso ? " · " : ""}${esc(c.curso || "")}</div>
+          <div class="user">${c.idade ? esc(c.idade) + " anos" : ""}${c.idioma ? " · " + esc(c.idioma) : ""}</div>
         </div>
       </div>
       <div class="mini-stats">
-        <div><b>${temPos(c,"i") ? "U" + esc(c.iU) : "—"}</b><span>Início</span></div>
-        <div><b>${temPos(c,"f") ? "U" + esc(c.fU) : "—"}</b><span>Agora</span></div>
-        <div><b>${a ? (a.u === 0 ? (a.c>0?"+":"") + a.c + "c" : (a.u>0?"+":"") + a.u + "u") : "—"}</b><span>Avanço</span></div>
+        <div><b>${num(c.unidade) !== null ? "U" + esc(c.unidade) : "—"}</b><span>Início</span></div>
+        <div><b>${at ? "U" + esc(at.u) : "—"}</b><span>Atual</span></div>
+        <div><b>${a ? (a.u === 0 ? (a.c > 0 ? "+" : "") + a.c + "c" : (a.u > 0 ? "+" : "") + a.u + "u") : "—"}</b><span>Avanço</span></div>
       </div>
       <span class="status-txt ${s}">${NOME_ST[s]}</span>
     </div>`;
   }).join("");
 }
 
-/* ---------- modal ---------- */
-function abrir(id){
-  const c = dados.criancas.find(x => x.id === id); if(!c) return;
-  aberto = id;
-  document.querySelectorAll("[data-c]").forEach(inp => inp.value = c[inp.dataset.c] ?? "");
-  preencherModal(c);
-  $("modal").classList.add("on");
+/* ---------- ficha ---------- */
+async function urlFoto(caminho){
+  if(!caminho) return null;
+  const { data } = await sb.storage.from(BUCKET).createSignedUrl(caminho, 3600);
+  return data?.signedUrl || null;
 }
-function preencherModal(c){
-  const s = status(c), a = avanco(c);
-  $("mAvatar").textContent = iniciais(c.nome);
-  $("mAvatar").style.background = cor(c.id);
+async function abrir(id){
+  const c = inscricoes.find(x => x.id === id); if(!c) return;
+  aberta = id;
+  preencherFicha(c);
+  $("mFS").value = c.f_secao ?? ""; $("mFU").value = c.f_unidade ?? ""; $("mFC").value = c.f_casa ?? "";
+  $("mObs").value = c.obs ?? ""; $("mSalvo").textContent = "";
+  $("modal").classList.add("on");
+  $("mFotoIni").innerHTML = "Carregando print...";
+  const u = await urlFoto(c.foto_inicio);
+  if(aberta !== id) return;
+  $("mFotoIni").innerHTML = u ? `<a href="${u}" target="_blank" rel="noopener"><img class="foto-grande" src="${u}" alt="Print do início"></a>` : "Sem print.";
+  const lista = enviosDe(c);
+  if(!lista.length){ $("mEnvios").textContent = "Nenhum progresso enviado ainda."; return; }
+  const urls = await Promise.all(lista.map(e => urlFoto(e.foto)));
+  if(aberta !== id) return;
+  $("mEnvios").innerHTML = lista.map((e,i) => `<div class="atualiz">
+      ${urls[i] ? `<a href="${urls[i]}" target="_blank" rel="noopener"><img src="${urls[i]}" alt=""></a>` : ""}
+      <div><b style="color:var(--texto)">${posTxt({s:e.secao,u:e.unidade,c:e.casa})}</b><br>${fmtDataHora(e.criado_em)}</div></div>`).join("");
+}
+function preencherFicha(c){
+  const s = status(c), at = atual(c);
+  $("mAvatar").textContent = iniciais(c.nome); $("mAvatar").style.background = cor(c.id);
   $("mNome").textContent = c.nome;
   $("mStatus").className = "status-txt " + s;
   $("mStatus").textContent = (s === "ativo" ? "🟢 " : s === "pendente" ? "🟡 " : "🔴 ") + NOME_ST[s];
-  $("mIni").textContent = posTxt(c,"i");
-  $("mFim").textContent = posTxt(c,"f");
-  $("mAvanco").textContent = avancoTxt(a);
-  [$("mIni"), $("mFim")].forEach(e => e.style.fontSize = "16px");
-  $("mFora").textContent = c.fora ? "↩️ Voltar a participar" : "🚫 Marcar como não participa";
-  const p = $("mPerfil");
-  if(c.usuario){ p.href = "https://www.duolingo.com/profile/" + encodeURIComponent(c.usuario); p.style.display = ""; }
-  else { p.removeAttribute("href"); p.style.display = "none"; }
+  $("mIni").textContent = posTxt(inicio(c));
+  $("mAtual").textContent = posTxt(at) + (at && at.origem === "envio" ? " (enviado)" : at ? " (equipe)" : "");
+  $("mAvanco").textContent = avancoTxt(avanco(c));
+  const info = [["Idade", c.idade ? c.idade + " anos" : ""],["Idioma", c.idioma],["Responsável", c.responsavel],["WhatsApp", c.telefone],
+    ["Funcionário(a)", c.funcionario],["Já usava o Duolingo", c.ja_usa],["Usuário no Duolingo", c.usuario],["Inscrita em", fmtDataHora(c.criado_em)],["Autorizou", c.autorizado ? "Sim ✅" : "Não"]];
+  $("mInfo").innerHTML = info.map(([k,v]) => `<div><label>${k}</label><div style="font-weight:800;padding:4px 0 6px">${esc(v || "—")}</div></div>`).join("");
+  $("mConferir").textContent = c.conferido ? "↩️ Desmarcar conferido" : "✅ Confirmar início (print ok)";
+  $("mFora").textContent = c.fora ? "↩️ Voltar ao desafio" : "🚫 Tirar do desafio";
 }
-document.querySelectorAll("[data-c]").forEach(inp => inp.addEventListener("input", () => {
-  const c = dados.criancas.find(x => x.id === aberto); if(!c) return;
-  let v = inp.value;
-  if(inp.dataset.c === "usuario") v = v.trim().replace(/^@/,"");
-  if(inp.dataset.c === "nome" && !v.trim()) return;
-  c[inp.dataset.c] = v;
-  salvar(); preencherModal(c); render();
-}));
-function fecharModal(){ $("modal").classList.remove("on"); aberto = null; }
+async function atualizarCampo(campos){
+  const c = inscricoes.find(x => x.id === aberta); if(!c) return false;
+  const { error } = await sb.from("duo_inscricoes").update(campos).eq("id", c.id);
+  if(error){ alert("Não foi possível salvar."); return false; }
+  Object.assign(c, campos); preencherFicha(c); render(); return true;
+}
+function alternarConferido(){ const c = inscricoes.find(x => x.id === aberta); if(c) atualizarCampo({ conferido: !c.conferido }); }
+function alternarFora(){ const c = inscricoes.find(x => x.id === aberta); if(c) atualizarCampo({ fora: !c.fora }); }
+async function salvarFicha(){
+  const ok = await atualizarCampo({ f_secao: num($("mFS").value), f_unidade: num($("mFU").value), f_casa: num($("mFC").value), obs: $("mObs").value.trim() || null });
+  if(ok) $("mSalvo").textContent = "✅ Salvo";
+}
+async function remover(){
+  const c = inscricoes.find(x => x.id === aberta); if(!c) return;
+  if(!confirm("Excluir a inscrição de " + c.nome + "? Isso não pode ser desfeito.")) return;
+  const { error } = await sb.from("duo_inscricoes").delete().eq("id", c.id);
+  if(error){ alert("Não foi possível excluir."); return; }
+  if(c.foto_inicio) await sb.storage.from(BUCKET).remove([c.foto_inicio]);
+  inscricoes = inscricoes.filter(x => x.id !== c.id); fecharModal(); render();
+}
+function fecharModal(){ $("modal").classList.remove("on"); aberta = null; }
 document.addEventListener("keydown", e => { if(e.key === "Escape") fecharModal(); });
-function alternarFora(){
-  const c = dados.criancas.find(x => x.id === aberto); if(!c) return;
-  c.fora = !c.fora; salvar(); preencherModal(c); render();
-}
-function remover(){
-  const c = dados.criancas.find(x => x.id === aberto); if(!c) return;
-  if(!confirm("Remover " + c.nome + " do desafio?")) return;
-  dados.criancas = dados.criancas.filter(x => x.id !== aberto);
-  salvar(); fecharModal(); render();
-}
 
 /* ---------- ranking ---------- */
 function rankingLista(){
-  return dados.criancas.filter(c => status(c) === "ativo" && avanco(c))
-    .sort((a,b) => { const A = avanco(a), B = avanco(b);
-      return (B.u - A.u) || (B.c - A.c) || ((B.xp || 0) - (A.xp || 0)); });
+  return inscricoes.filter(c => status(c) === "ativo" && avanco(c))
+    .sort((a,b) => { const A = avanco(a), B = avanco(b); return (B.u - A.u) || (B.c - A.c); });
 }
 function renderRanking(){
   const r = rankingLista();
-  const deg = (c, med, cls) => c ? `<div class="degrau ${cls}" onclick="abrir('${c.id}')" style="cursor:pointer">
-      <div class="med">${med}</div><div class="nome">${esc(c.nome)}</div><div class="xp">${avancoTxt(avanco(c))}</div></div>`
+  const deg = (c, med, cls) => c ? `<div class="degrau ${cls}" onclick="abrir('${c.id}')" style="cursor:pointer"><div class="med">${med}</div><div class="nome">${esc(c.nome)}</div><div class="xp">${avancoTxt(avanco(c))}</div></div>`
     : `<div class="degrau ${cls}" style="opacity:.45"><div class="med">${med}</div><div class="nome">—</div></div>`;
   $("podio").innerHTML = deg(r[1],"🥈","p2") + deg(r[0],"🥇","p1") + deg(r[2],"🥉","p3");
-  $("ranking").innerHTML = r.length ? r.map((c,i) => { const a = avanco(c); return `<tr style="cursor:pointer" onclick="abrir('${c.id}')">
-      <td>${i+1}º</td><td>${esc(c.nome)}</td><td>${posTxt(c,"i")}</td><td>${posTxt(c,"f")}</td>
-      <td class="ganho">${avancoTxt(a)}</td><td>${xpTxt(a)}</td></tr>`; }).join("")
-    : `<tr><td colspan="6" class="vazio">O ranking aparece quando as crianças ativas tiverem a posição atual/final preenchida.</td></tr>`;
+  $("ranking").innerHTML = r.length ? r.map((c,i) => `<tr style="cursor:pointer" onclick="abrir('${c.id}')"><td>${i+1}º</td><td>${esc(c.nome)}</td><td>${posTxt(inicio(c))}</td><td>${posTxt(atual(c))}</td><td class="ganho">${avancoTxt(avanco(c))}</td></tr>`).join("")
+    : `<tr><td colspan="5" class="vazio">O ranking aparece quando houver crianças com início conferido e posição atual.</td></tr>`;
 }
 
-function render(){ renderResumo(); renderPainel(); renderRanking(); }
+/* ---------- progressos ---------- */
+function renderEnvios(){
+  if(!envios.length){ $("listaEnvios").innerHTML = `<div class="vazio">Nenhum progresso enviado ainda.</div>`; return; }
+  $("listaEnvios").innerHTML = `<div class="scroll"><table><thead><tr><th>Enviado em</th><th>Nome</th><th>WhatsApp</th><th>Posição</th><th>Inscrição</th></tr></thead><tbody>
+    ${envios.map(e => { const c = inscricoes.find(i => enviosDe(i).includes(e));
+      return `<tr ${c ? `style="cursor:pointer" onclick="abrir('${c.id}')"` : ""}><td>${fmtDataHora(e.criado_em)}</td><td>${esc(e.nome)}</td><td>${esc(e.telefone)}</td><td>${posTxt({s:e.secao,u:e.unidade,c:e.casa})}</td><td>${c ? "✅ " + esc(c.nome) : "⚠️ não encontrada"}</td></tr>`; }).join("")}
+  </tbody></table></div>`;
+}
 
-/* ---------- relatório / exportação ---------- */
+/* ---------- divulgar ---------- */
+function prepararDivulgar(){
+  const link = location.origin + location.pathname;
+  $("linkForm").value = link;
+  if(!$("msgZap").value) $("msgZap").value =
+`🦉 *Desafio Duolingo Madeirol* 🦉
+
+Olá, pessoal! A Madeirol está lançando um desafio para incentivar as crianças a aprenderem um novo idioma com o Duolingo! 📚
+
+Durante *6 meses* as crianças usam o app e, no final, vamos ver *quem avançou mais casas*. 🏆
+
+Para participar, o *responsável* preenche a inscrição e anexa um print da tela do Duolingo mostrando onde a criança está:
+👉 ${link}
+
+⚠️ Só participa quem enviar a inscrição com o print.`;
+}
+function enviarZap(){ window.open("https://wa.me/?text=" + encodeURIComponent($("msgZap").value), "_blank"); }
+async function copiarMsg(){ try{ await navigator.clipboard.writeText($("msgZap").value); $("copiado").textContent = "✅ Mensagem copiada!"; }catch(e){ $("msgZap").select(); $("copiado").textContent = "Selecionei o texto — use Ctrl+C."; } }
+
+/* ---------- relatório / CSV ---------- */
 function imprimir(){
-  const r = rankingLista();
-  const ativas = dados.criancas.filter(c => status(c) === "ativo");
-  const semFim = ativas.filter(c => !avanco(c));
-  const linhaPodio = (c, m) => m + " " + (c ? esc(c.nome) + " (" + avancoTxt(avanco(c)) + ")" : "—");
-  $("relatorio").innerHTML = `
-    <h1 style="margin:0">Relatório – Desafio Duolingo Madeirol</h1>
-    <p style="color:#555">Período: ${fmtData(dados.inicio)} a ${fmtData(dados.fim)} · Gerado em ${new Date().toLocaleDateString("pt-BR")}</p>
-    <p><b>${dados.criancas.length}</b> cadastradas · <b>${ativas.length}</b> participaram · <b>${r.length}</b> avaliadas</p>
-    <h2>Pódio</h2>
-    <p style="font-size:18px">${linhaPodio(r[0],"🥇")}<br>${linhaPodio(r[1],"🥈")}<br>${linhaPodio(r[2],"🥉")}</p>
+  const r = rankingLista(), ativas = inscricoes.filter(c => status(c) === "ativo");
+  const lp = (c, m) => m + " " + (c ? esc(c.nome) + " (" + avancoTxt(avanco(c)) + ")" : "—");
+  $("relatorio").innerHTML = `<h1 style="margin:0">Relatório – Desafio Duolingo Madeirol</h1>
+    <p style="color:#555">Gerado em ${new Date().toLocaleDateString("pt-BR")}</p>
+    <p><b>${inscricoes.length}</b> inscritas · <b>${ativas.length}</b> com início conferido · <b>${r.length}</b> avaliadas</p>
+    <h2>Pódio</h2><p style="font-size:18px">${lp(r[0],"🥇")}<br>${lp(r[1],"🥈")}<br>${lp(r[2],"🥉")}</p>
     <h2>Classificação completa</h2>
-    <table border="1" cellpadding="6" style="border-collapse:collapse;width:100%">
-      <thead><tr><th>#</th><th>Nome</th><th>Início</th><th>Fim</th><th>Avanço</th><th>XP ganho</th></tr></thead><tbody>
-      ${r.map((c,i) => { const a = avanco(c); return `<tr><td>${i+1}º</td><td>${esc(c.nome)}</td><td>${posTxt(c,"i")}</td><td>${posTxt(c,"f")}</td><td><b>${avancoTxt(a)}</b></td><td>${xpTxt(a)}</td></tr>`; }).join("") || `<tr><td colspan="6">Sem dados finais.</td></tr>`}
+    <table border="1" cellpadding="6" style="border-collapse:collapse;width:100%"><thead><tr><th>#</th><th>Nome</th><th>Idade</th><th>Início</th><th>Atual</th><th>Avanço</th></tr></thead><tbody>
+    ${r.map((c,i) => `<tr><td>${i+1}º</td><td>${esc(c.nome)}</td><td>${esc(c.idade || "")}</td><td>${posTxt(inicio(c))}</td><td>${posTxt(atual(c))}</td><td><b>${avancoTxt(avanco(c))}</b></td></tr>`).join("") || `<tr><td colspan="6">Sem dados.</td></tr>`}
     </tbody></table>
-    ${semFim.length ? `<p style="color:#8a6a00">Ativas sem posição final (não avaliadas): ${semFim.map(c => esc(c.nome)).join(", ")}</p>` : ""}
-    <p style="font-size:12px;color:#777;margin-top:24px">Critério: quem avançou mais unidades no caminho do Duolingo; empate decidido pelas casas e depois pelo XP.</p>`;
+    <p style="font-size:12px;color:#777;margin-top:24px">Critério: unidades avançadas no caminho do Duolingo; empate decidido pelas casas.</p>`;
   window.print();
 }
-function baixar(nome, conteudo, tipo){
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([conteudo], { type: tipo }));
-  a.download = nome; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-}
 function exportarCSV(){
-  const L = [["Nome","Idade","Curso","Responsável","Telefone","Usuário","Status","Seção ini.","Unidade ini.","Casa ini.","XP ini.","Seção fim","Unidade fim","Casa fim","XP fim","Unidades avançadas","Casas (dif.)","XP ganho","Observações"]];
-  dados.criancas.forEach(c => { const a = avanco(c);
-    L.push([c.nome,c.idade,c.curso,c.resp,c.tel,c.usuario,NOME_ST[status(c)],c.iS,c.iU,c.iC,c.iX,c.fS,c.fU,c.fC,c.fX,a?a.u:"",a?a.c:"",a&&a.xp!==null?a.xp:"",c.obs]); });
-  baixar("desafio-duolingo.csv", "﻿" + L.map(l => l.map(v => `"${String(v ?? "").replace(/"/g,'""')}"`).join(";")).join("\n"), "text/csv;charset=utf-8");
+  const L = [["Nome","Idade","Idioma","Responsável","WhatsApp","Funcionário(a)","Já usava","Usuário","Inscrita em","Status","Seção ini.","Unidade ini.","Casa ini.","Seção atual","Unidade atual","Casa atual","Unidades avançadas","Casas (dif.)","Observações"]];
+  inscricoes.forEach(c => { const a = atual(c) || {}, v = avanco(c);
+    L.push([c.nome,c.idade,c.idioma,c.responsavel,c.telefone,c.funcionario,c.ja_usa,c.usuario,fmtDataHora(c.criado_em),NOME_ST[status(c)],c.secao,c.unidade,c.casa,a.s,a.u,a.c,v?v.u:"",v?v.c:"",c.obs]); });
+  const csv = "﻿" + L.map(l => l.map(x => `"${String(x ?? "").replace(/"/g,'""')}"`).join(";")).join("\n");
+  const el = document.createElement("a"); el.href = URL.createObjectURL(new Blob([csv], {type:"text/csv;charset=utf-8"}));
+  el.download = "desafio-duolingo.csv"; el.click();
 }
-function exportarJSON(){ baixar("backup-desafio-duolingo-" + new Date().toISOString().slice(0,10) + ".json", JSON.stringify(dados, null, 2), "application/json"); }
-function importarJSON(ev){
-  const f = ev.target.files[0]; if(!f) return;
-  const rd = new FileReader();
-  rd.onload = () => { try{
-      const d = JSON.parse(rd.result); if(!Array.isArray(d.criancas)) throw 0;
-      if(!confirm("Substituir os dados atuais pelo backup?")) return;
-      dados = d; salvar(); iniciarCampos(); render();
-    }catch(e){ alert("Arquivo de backup inválido."); } };
-  rd.readAsText(f); ev.target.value = "";
-}
-function limparTudo(){
-  if(!confirm("Apagar TODOS os dados? Faça um backup antes.")) return;
-  dados = { inicio:"", fim:"", criancas:[] }; salvar(); iniciarCampos(); render();
-}
-function iniciarCampos(){ $("dataInicio").value = dados.inicio || ""; $("dataFim").value = dados.fim || ""; }
-$("dataInicio").onchange = () => { dados.inicio = $("dataInicio").value; salvar(); renderResumo(); };
-$("dataFim").onchange = () => { dados.fim = $("dataFim").value; salvar(); renderResumo(); };
-$("fNome").addEventListener("keydown", e => { if(e.key === "Enter") adicionar(); });
 
-carregar(); iniciarCampos(); render();
+/* ======================= INÍCIO ======================= */
+(async () => {
+  const { data:{ session } } = await sb.auth.getSession();
+  if(session) entrarPainel(); else mostrar("publico");
+})();
+
 </script>
 </body>
 </html>
