@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafio Duolingo – Madeirol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde:#58cc02; --verde-esc:#3f9a00; --verde-claro:#eafbdc;
+    --amarelo:#ffb800; --amarelo-claro:#fff4d6;
+    --vermelho:#ef4444; --vermelho-claro:#fde8e8;
+    --fundo:#f3f5f0; --card:#ffffff; --texto:#1f2a1a; --cinza:#6b7466; --borda:#e4e8df;
+    --sombra:0 2px 0 #e1e5dc, 0 8px 24px rgba(30,50,20,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Nunito","Segoe UI",Arial,sans-serif;background:var(--fundo);color:var(--texto)}
+  button{font-family:inherit}
+
+  /* ---------- layout ---------- */
+  .app{display:flex;min-height:100vh}
+  aside{width:240px;background:#fff;border-right:1px solid var(--borda);padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+  .logo{display:flex;align-items:center;gap:10px;padding:0 10px 22px}
+  .logo .coruja{width:42px;height:42px;border-radius:12px;background:var(--verde);display:grid;place-items:center;font-size:24px;box-shadow:0 3px 0 var(--verde-esc)}
+  .logo b{display:block;font-size:16px;font-weight:900;line-height:1.1}
+  .logo small{color:var(--cinza);font-size:12px;font-weight:700}
+  nav button{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;margin-bottom:4px;border:2px solid transparent;border-radius:12px;background:none;font-size:15px;font-weight:800;color:var(--cinza);cursor:pointer;text-align:left}
+  nav button:hover{background:#f5f7f2}
+  nav button.on{background:var(--verde-claro);border-color:#bfeca0;color:var(--verde-esc)}
+  nav .ico{font-size:20px;width:24px;text-align:center}
+  .periodo{margin-top:auto;padding:14px;border-radius:12px;background:#f7f9f4;font-size:12px;color:var(--cinza);font-weight:700}
+  .periodo b{color:var(--texto);display:block;font-size:13px;margin-top:2px}
+
+  main{flex:1;padding:28px 32px;max-width:1200px}
+  .topo{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+  .topo h1{margin:0;font-size:26px;font-weight:900}
+  .topo p{margin:2px 0 0;color:var(--cinza);font-weight:700;font-size:14px}
+  .aba{display:none}.aba.on{display:block}
+
+  /* ---------- botões / inputs ---------- */
+  .btn{border:0;border-radius:12px;padding:11px 18px;font-size:14px;font-weight:800;cursor:pointer;background:var(--verde);color:#fff;box-shadow:0 3px 0 var(--verde-esc);transition:transform .05s}
+  .btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--verde-esc)}
+  .btn.sec{background:#fff;color:var(--texto);box-shadow:0 3px 0 var(--borda);border:2px solid var(--borda)}
+  .btn.perigo{background:#fff;color:var(--vermelho);border:2px solid #f6c6c6;box-shadow:0 3px 0 #f6c6c6}
+  .btn.peq{padding:8px 12px;font-size:13px}
+  label{display:block;font-size:12px;color:var(--cinza);margin-bottom:5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
+  input{width:100%;padding:11px 12px;border:2px solid var(--borda);border-radius:12px;font-size:15px;font-family:inherit;font-weight:700;background:#fff;color:var(--texto)}
+  input:focus{outline:none;border-color:var(--verde)}
+  .card{background:var(--card);border-radius:18px;padding:22px;box-shadow:var(--sombra);margin-bottom:18px}
+  .card h2{margin:0 0 4px;font-size:18px;font-weight:900}
+  .ajuda{font-size:14px;color:var(--cinza);margin:0 0 16px;font-weight:600}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+  .acoes{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+
+  /* ---------- resumo ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+  .stat{background:#fff;border-radius:16px;padding:16px 18px;box-shadow:var(--sombra);display:flex;align-items:center;gap:14px}
+  .stat .bola{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:20px}
+  .stat b{display:block;font-size:26px;font-weight:900;line-height:1}
+  .stat span{font-size:13px;color:var(--cinza);font-weight:700}
+
+  /* ---------- filtros ---------- */
+  .filtros{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+  .busca{flex:1;min-width:200px;position:relative}
+  .busca input{padding-left:40px}
+  .busca::before{content:"🔍";position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:15px}
+  .chip{border:2px solid var(--borda);background:#fff;border-radius:99px;padding:8px 14px;font-weight:800;font-size:13px;cursor:pointer;color:var(--cinza)}
+  .chip.on{border-color:var(--verde);color:var(--verde-esc);background:var(--verde-claro)}
+
+  /* ---------- painel de cards ---------- */
+  .painel{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .pessoa{background:#fff;border-radius:18px;padding:18px;box-shadow:var(--sombra);cursor:pointer;border:2px solid transparent;transition:border-color .15s, transform .15s;position:relative}
+  .pessoa:hover{border-color:#bfeca0;transform:translateY(-2px)}
+  .pessoa .linha1{display:flex;align-items:center;gap:12px}
+  .avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:17px;color:#fff;flex-shrink:0}
+  .pessoa .nome{font-weight:900;font-size:16px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pessoa .user{font-size:13px;color:var(--cinza);font-weight:700}
+  .ponto{position:absolute;top:16px;right:16px;width:14px;height:14px;border-radius:50%}
+  .ponto.ativo{background:var(--verde);box-shadow:0 0 0 4px var(--verde-claro)}
+  .ponto.pendente{background:var(--amarelo);box-shadow:0 0 0 4px var(--amarelo-claro)}
+  .ponto.fora{background:var(--vermelho);box-shadow:0 0 0 4px var(--vermelho-claro)}
+  .ponto.ativo{animation:pulsa 2s infinite}
+  @keyframes pulsa{0%,100%{box-shadow:0 0 0 4px var(--verde-claro)}50%{box-shadow:0 0 0 7px var(--verde-claro)}}
+  .mini-stats{display:flex;gap:8px;margin-top:14px}
+  .mini-stats div{flex:1;background:#f7f9f4;border-radius:10px;padding:8px;text-align:center}
+  .mini-stats b{display:block;font-size:15px;font-weight:900}
+  .mini-stats span{font-size:11px;color:var(--cinza);font-weight:800;text-transform:uppercase}
+  .status-txt{display:inline-block;margin-top:12px;font-size:12px;font-weight:800;padding:4px 10px;border-radius:99px}
+  .status-txt.ativo{background:var(--verde-claro);color:var(--verde-esc)}
+  .status-txt.pendente{background:var(--amarelo-claro);color:#9a6b00}
+  .status-txt.fora{background:var(--vermelho-claro);color:#b42323}
+  .vazio{text-align:center;padding:50px 20px;color:var(--cinza);font-weight:700}
+  .vazio .big{font-size:48px;margin-bottom:8px}
+
+  /* ---------- modal ---------- */
+  .fundo-modal{position:fixed;inset:0;background:rgba(20,30,15,.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
+  .fundo-modal.on{display:flex}
+  .modal{background:#fff;border-radius:22px;width:100%;max-width:620px;max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+  .modal-topo{padding:24px 24px 18px;display:flex;gap:16px;align-items:center;border-bottom:2px solid #f0f2ec;position:relative}
+  .modal-topo .avatar{width:62px;height:62px;font-size:22px}
+  .modal-topo h3{margin:0;font-size:22px;font-weight:900}
+  .fechar{position:absolute;top:16px;right:16px;border:0;background:#f3f5f0;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;font-weight:900;color:var(--cinza)}
+  .modal-corpo{padding:22px 24px}
+  .destaque{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+  .destaque div{border-radius:14px;padding:14px;text-align:center;background:#f7f9f4}
+  .destaque div.g{background:var(--verde-claro)}
+  .destaque b{display:block;font-size:22px;font-weight:900}
+  .destaque div.g b{color:var(--verde-esc)}
+  .destaque span{font-size:12px;color:var(--cinza);font-weight:800}
+  .secao{font-size:13px;font-weight:900;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em;margin:18px 0 10px}
+  .modal-rodape{padding:16px 24px 22px;display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between}
+
+  /* ---------- ranking ---------- */
+  .podio{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:14px;align-items:end;margin-bottom:20px}
+  .degrau{background:#fff;border-radius:18px;box-shadow:var(--sombra);text-align:center;padding:20px 12px}
+  .degrau .med{font-size:38px}
+  .degrau .nome{font-weight:900;font-size:16px;margin-top:6px}
+  .degrau .xp{font-weight:900;color:var(--verde-esc);font-size:20px;margin-top:4px}
+  .degrau.p1{padding-top:30px;padding-bottom:30px;border:2px solid #ffe08a}
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{padding:12px 10px;border-bottom:2px solid #f0f2ec;text-align:left}
+  th{font-size:12px;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em;font-weight:900}
+  td{font-weight:700}
+  .ganho{font-weight:900;color:var(--verde-esc)}
+  .scroll{overflow-x:auto}
+
+  #relatorio{display:none}
+  @media print{
+    aside,main>*:not(#relatorio),.fundo-modal{display:none!important}
+    #relatorio{display:block!important;font-family:Arial,sans-serif}
+    body{background:#fff}
+    main{padding:0}
+  }
+  @media (max-width:860px){
+    .app{flex-direction:column}
+    aside{width:100%;height:auto;position:static;flex-direction:row;align-items:center;flex-wrap:wrap;padding:12px}
+    .logo{padding:0 10px 0 0}
+    nav{display:flex;gap:4px;flex-wrap:wrap}
+    nav button{width:auto;margin:0;padding:9px 12px}
+    .periodo{display:none}
+    main{padding:20px 16px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .podio{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="logo">
+      <div class="coruja">🦉</div>
+      <div><b>Desafio Duolingo</b><small>Madeirol</small></div>
+    </div>
+    <nav>
+      <button data-aba="painel" class="on"><span class="ico">🏠</span>Painel</button>
+      <button data-aba="cadastro"><span class="ico">➕</span>Cadastrar</button>
+      <button data-aba="ranking"><span class="ico">🏆</span>Ranking</button>
+      <button data-aba="config"><span class="ico">⚙️</span>Configurações</button>
+    </nav>
+    <div class="periodo">Período do desafio<b id="periodoTxt">Não definido</b></div>
+  </aside>
+
+  <main>
+    <!-- ================= PAINEL ================= -->
+    <section class="aba on" id="aba-painel">
+      <div class="topo">
+        <div><h1>Painel de controle</h1><p>Clique numa criança para ver as informações completas</p></div>
+        <button class="btn" onclick="irPara('cadastro')">+ Nova criança</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="bola" style="background:#eef1ea">👥</div><div><b id="sTotal">0</b><span>Cadastradas</span></div></div>
+        <div class="stat"><div class="bola" style="background:var(--verde-claro)">🟢</div><div><b id="sAtivas">0</b><span>Ativas</span></div></div>
+        <div class="stat"><div class="bola" style="background:var(--amarelo-claro)">🟡</div><div><b id="sPend">0</b><span>Pendentes</span></div></div>
+        <div class="stat"><div class="bola" style="background:var(--vermelho-claro)">🔴</div><div><b id="sFora">0</b><span>Não participam</span></div></div>
+      </div>
+
+      <div class="filtros">
+        <div class="busca"><input id="busca" placeholder="Buscar por nome ou usuário..."></div>
+        <button class="chip on" data-f="todas">Todas</button>
+        <button class="chip" data-f="ativo">🟢 Ativas</button>
+        <button class="chip" data-f="pendente">🟡 Pendentes</button>
+        <button class="chip" data-f="fora">🔴 Fora</button>
+      </div>
+
+      <div class="painel" id="painel"></div>
+    </section>
+
+    <!-- ================= CADASTRO ================= -->
+    <section class="aba" id="aba-cadastro">
+      <div class="topo"><div><h1>Cadastrar criança</h1><p>Peça só o usuário do Duolingo e um print do perfil — não precisa de senha</p></div></div>
+      <div class="card">
+        <h2>Dados da criança</h2>
+        <p class="ajuda">O usuário aparece no app, na aba <b>Perfil</b>, logo abaixo do nome.</p>
+        <div class="grid">
+          <div><label>Nome *</label><input id="fNome" placeholder="Ex.: João Silva"></div>
+          <div><label>Usuário do Duolingo</label><input id="fUser" placeholder="Ex.: joaozinho123"></div>
+          <div><label>Idade</label><input id="fIdade" type="number" min="0" placeholder="Ex.: 10"></div>
+          <div><label>Responsável</label><input id="fResp" placeholder="Ex.: Maria Silva"></div>
+          <div><label>Telefone</label><input id="fTel" placeholder="(21) 9...."></div>
+          <div><label>Curso / idioma</label><input id="fCurso" placeholder="Ex.: Inglês"></div>
+        </div>
+        <div class="secao">Ponto de partida (do print do perfil)</div>
+        <div class="grid">
+          <div><label>XP inicial</label><input id="fXpIni" type="number" min="0" placeholder="Ex.: 1250"></div>
+          <div><label>Ofensiva inicial (dias)</label><input id="fOfIni" type="number" min="0" placeholder="Ex.: 12"></div>
+        </div>
+        <div class="acoes"><button class="btn" onclick="adicionar()">Adicionar criança</button></div>
+      </div>
+    </section>
+
+    <!-- ================= RANKING ================= -->
+    <section class="aba" id="aba-ranking">
+      <div class="topo">
+        <div><h1>Ranking</h1><p>Quem mais ganhou XP no período · desempate pela ofensiva</p></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" onclick="imprimir()">🖨️ Gerar relatório (PDF)</button>
+          <button class="btn sec" onclick="exportarCSV()">⬇️ Planilha (CSV)</button>
+        </div>
+      </div>
+      <div class="podio" id="podio"></div>
+      <div class="card">
+        <h2>Classificação completa</h2>
+        <p class="ajuda">Entram as crianças ativas que já têm XP final preenchido.</p>
+        <div class="scroll"><table>
+          <thead><tr><th>#</th><th>Nome</th><th>XP inicial</th><th>XP final</th><th>XP ganho</th><th>Ofensiva</th></tr></thead>
+          <tbody id="ranking"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- ================= CONFIG ================= -->
+    <section class="aba" id="aba-config">
+      <div class="topo"><div><h1>Configurações</h1><p>Período do desafio e backup dos dados</p></div></div>
+      <div class="card">
+        <h2>Período do desafio</h2>
+        <p class="ajuda">Aparece no menu e no relatório final.</p>
+        <div class="grid">
+          <div><label>Data de início</label><input type="date" id="dataInicio"></div>
+          <div><label>Data de fim</label><input type="date" id="dataFim"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Backup</h2>
+        <p class="ajuda">Os dados ficam salvos neste navegador. Salve um backup de vez em quando — o arquivo também serve para abrir em outro computador.</p>
+        <div class="acoes" style="margin-top:0">
+          <button class="btn sec" onclick="exportarJSON()">💾 Salvar backup</button>
+          <button class="btn sec" onclick="document.getElementById('arqImport').click()">📂 Carregar backup</button>
+          <input type="file" id="arqImport" accept=".json" style="display:none" onchange="importarJSON(event)">
+          <button class="btn perigo" onclick="limparTudo()">Apagar tudo</button>
+        </div>
+      </div>
+    </section>
+
+    <div id="relatorio"></div>
+  </main>
+</div>
+
+<!-- ================= MODAL DETALHES ================= -->
+<div class="fundo-modal" id="modal" onclick="if(event.target===this)fecharModal()">
+  <div class="modal">
+    <div class="modal-topo">
+      <div class="avatar" id="mAvatar"></div>
+      <div>
+        <h3 id="mNome"></h3>
+        <span class="status-txt" id="mStatus" style="margin-top:6px"></span>
+      </div>
+      <button class="fechar" onclick="fecharModal()">✕</button>
+    </div>
+    <div class="modal-corpo">
+      <div class="destaque">
+        <div><b id="mXpIni">—</b><span>XP inicial</span></div>
+        <div><b id="mXpFim">—</b><span>XP final</span></div>
+        <div class="g"><b id="mGanho">—</b><span>XP ganho</span></div>
+      </div>
+
+      <div class="secao">Informações</div>
+      <div class="grid">
+        <div><label>Nome</label><input data-c="nome"></div>
+        <div><label>Usuário do Duolingo</label><input data-c="usuario"></div>
+        <div><label>Idade</label><input data-c="idade" type="number"></div>
+        <div><label>Curso / idioma</label><input data-c="curso"></div>
+        <div><label>Responsável</label><input data-c="resp"></div>
+        <div><label>Telefone</label><input data-c="tel"></div>
+      </div>
+
+      <div class="secao">Início do desafio</div>
+      <div class="grid">
+        <div><label>XP inicial</label><input data-c="xpIni" type="number"></div>
+        <div><label>Ofensiva inicial</label><input data-c="ofIni" type="number"></div>
+      </div>
+
+      <div class="secao">Fim do desafio</div>
+      <div class="grid">
+        <div><label>XP final</label><input data-c="xpFim" type="number"></div>
+        <div><label>Ofensiva final</label><input data-c="ofFim" type="number"></div>
+      </div>
+
+      <div class="secao">Observações</div>
+      <input data-c="obs" placeholder="Ex.: mandou o print dia 20/11">
+    </div>
+    <div class="modal-rodape">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a id="mPerfil" target="_blank" rel="noopener"><button class="btn sec peq">🦉 Ver perfil no Duolingo</button></a>
+        <button class="btn sec peq" id="mFora" onclick="alternarFora()"></button>
+      </div>
+      <button class="btn perigo peq" onclick="remover()">Remover</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CHAVE = "desafioDuolingoMadeirol_v1";
+let dados = { inicio:"", fim:"", criancas:[] };
+let filtro = "todas", aberto = null;
+
+const CORES = ["#58cc02","#1cb0f6","#ff9600","#ce82ff","#ff4b4b","#2bc0a4","#ffc800","#7c6cff"];
+const $ = id => document.getElementById(id);
+const num = v => (v === "" || v == null || isNaN(Number(v))) ? null : Number(v);
+const fmt = v => v == null ? "—" : Number(v).toLocaleString("pt-BR");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtData = d => d ? d.split("-").reverse().join("/") : "—";
+const iniciais = n => n.trim().split(/\s+/).slice(0,2).map(p => p[0]).join("").toUpperCase();
+const cor = id => CORES[[...id].reduce((s,c) => s + c.charCodeAt(0), 0) % CORES.length];
+
+function carregar(){ try{ const s = localStorage.getItem(CHAVE); if(s) dados = JSON.parse(s); }catch(e){} dados.criancas = dados.criancas || []; }
+function salvar(){ try{ localStorage.setItem(CHAVE, JSON.stringify(dados)); }catch(e){} }
+
+function status(c){ if(c.fora) return "fora"; return (c.usuario && num(c.xpIni) !== null) ? "ativo" : "pendente"; }
+const NOME_ST = { ativo:"Ativa", pendente:"Pendente", fora:"Não participa" };
+function ganho(c){ const a = num(c.xpIni), b = num(c.xpFim); return (a !== null && b !== null) ? b - a : null; }
+const fmtGanho = g => g == null ? "—" : (g > 0 ? "+" : "") + fmt(g);
+
+/* ---------- abas ---------- */
+function irPara(aba){
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.aba === aba));
+  document.querySelectorAll(".aba").forEach(s => s.classList.toggle("on", s.id === "aba-" + aba));
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => irPara(b.dataset.aba));
+document.querySelectorAll(".chip").forEach(ch => ch.onclick = () => {
+  filtro = ch.dataset.f;
+  document.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === ch));
+  renderPainel();
+});
+$("busca").oninput = renderPainel;
+
+/* ---------- cadastro ---------- */
+function adicionar(){
+  const nome = $("fNome").value.trim();
+  if(!nome){ $("fNome").focus(); return; }
+  dados.criancas.push({
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+    nome, usuario: $("fUser").value.trim().replace(/^@/,""), idade: $("fIdade").value,
+    resp: $("fResp").value.trim(), tel: $("fTel").value.trim(), curso: $("fCurso").value.trim(),
+    xpIni: $("fXpIni").value, ofIni: $("fOfIni").value, xpFim:"", ofFim:"", obs:"", fora:false
+  });
+  ["fNome","fUser","fIdade","fResp","fTel","fCurso","fXpIni","fOfIni"].forEach(i => $(i).value = "");
+  salvar(); render(); irPara("painel");
+}
+
+/* ---------- painel ---------- */
+function renderResumo(){
+  const st = dados.criancas.map(status);
+  $("sTotal").textContent = st.length;
+  $("sAtivas").textContent = st.filter(s => s === "ativo").length;
+  $("sPend").textContent = st.filter(s => s === "pendente").length;
+  $("sFora").textContent = st.filter(s => s === "fora").length;
+  $("periodoTxt").textContent = dados.inicio ? fmtData(dados.inicio) + " → " + fmtData(dados.fim) : "Não definido";
+}
+function renderPainel(){
+  const q = $("busca").value.trim().toLowerCase();
+  const lista = dados.criancas.filter(c =>
+    (filtro === "todas" || status(c) === filtro) &&
+    (!q || c.nome.toLowerCase().includes(q) || (c.usuario||"").toLowerCase().includes(q))
+  ).sort((a,b) => a.nome.localeCompare(b.nome, "pt-BR"));
+
+  if(!dados.criancas.length){
+    $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1"><div class="big">🦉</div>Nenhuma criança cadastrada ainda.<br><br><button class="btn" onclick="irPara('cadastro')">Cadastrar a primeira</button></div>`;
+    return;
+  }
+  if(!lista.length){ $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1">Ninguém encontrado com esse filtro.</div>`; return; }
+
+  $("painel").innerHTML = lista.map(c => {
+    const s = status(c);
+    return `<div class="pessoa" onclick="abrir('${c.id}')">
+      <span class="ponto ${s}" title="${NOME_ST[s]}"></span>
+      <div class="linha1">
+        <div class="avatar" style="background:${cor(c.id)}">${esc(iniciais(c.nome))}</div>
+        <div style="min-width:0;padding-right:18px">
+          <div class="nome">${esc(c.nome)}</div>
+          <div class="user">${c.usuario ? "@" + esc(c.usuario) : "sem usuário"}</div>
+        </div>
+      </div>
+      <div class="mini-stats">
+        <div><b>${fmt(num(c.xpIni))}</b><span>XP ini.</span></div>
+        <div><b>${fmtGanho(ganho(c))}</b><span>Ganho</span></div>
+        <div><b>🔥 ${esc(c.ofFim || c.ofIni || "—")}</b><span>Ofensiva</span></div>
+      </div>
+      <span class="status-txt ${s}">${NOME_ST[s]}</span>
+    </div>`;
+  }).join("");
+}
+
+/* ---------- modal ---------- */
+function abrir(id){
+  const c = dados.criancas.find(x => x.id === id); if(!c) return;
+  aberto = id;
+  document.querySelectorAll("[data-c]").forEach(inp => inp.value = c[inp.dataset.c] ?? "");
+  preencherModal(c);
+  $("modal").classList.add("on");
+}
+function preencherModal(c){
+  const s = status(c);
+  $("mAvatar").textContent = iniciais(c.nome || "?");
+  $("mAvatar").style.background = cor(c.id);
+  $("mNome").textContent = c.nome;
+  $("mStatus").className = "status-txt " + s;
+  $("mStatus").textContent = (s === "ativo" ? "🟢 " : s === "pendente" ? "🟡 " : "🔴 ") + NOME_ST[s];
+  $("mXpIni").textContent = fmt(num(c.xpIni));
+  $("mXpFim").textContent = fmt(num(c.xpFim));
+  $("mGanho").textContent = fmtGanho(ganho(c));
+  $("mFora").textContent = c.fora ? "↩️ Voltar a participar" : "🚫 Marcar como não participa";
+  const p = $("mPerfil");
+  if(c.usuario){ p.href = "https://www.duolingo.com/profile/" + encodeURIComponent(c.usuario); p.style.display = ""; }
+  else { p.removeAttribute("href"); p.style.display = "none"; }
+}
+document.querySelectorAll("[data-c]").forEach(inp => inp.addEventListener("input", () => {
+  const c = dados.criancas.find(x => x.id === aberto); if(!c) return;
+  let v = inp.value;
+  if(inp.dataset.c === "usuario") v = v.trim().replace(/^@/,"");
+  if(inp.dataset.c === "nome" && !v.trim()) return;
+  c[inp.dataset.c] = v;
+  salvar(); preencherModal(c); render();
+}));
+function fecharModal(){ $("modal").classList.remove("on"); aberto = null; }
+document.addEventListener("keydown", e => { if(e.key === "Escape") fecharModal(); });
+function alternarFora(){
+  const c = dados.criancas.find(x => x.id === aberto); if(!c) return;
+  c.fora = !c.fora; salvar(); preencherModal(c); render();
+}
+function remover(){
+  const c = dados.criancas.find(x => x.id === aberto); if(!c) return;
+  if(!confirm("Remover " + c.nome + " do desafio?")) return;
+  dados.criancas = dados.criancas.filter(x => x.id !== aberto);
+  salvar(); fecharModal(); render();
+}
+
+/* ---------- ranking ---------- */
+function rankingLista(){
+  return dados.criancas.filter(c => status(c) === "ativo" && ganho(c) !== null)
+    .sort((a,b) => (ganho(b) - ganho(a)) || ((num(b.ofFim)||0) - (num(a.ofFim)||0)));
+}
+function renderRanking(){
+  const r = rankingLista();
+  const deg = (c, med, cls) => c ? `<div class="degrau ${cls}" onclick="abrir('${c.id}')" style="cursor:pointer">
+      <div class="med">${med}</div><div class="nome">${esc(c.nome)}</div><div class="xp">${fmtGanho(ganho(c))} XP</div></div>`
+    : `<div class="degrau ${cls}" style="opacity:.45"><div class="med">${med}</div><div class="nome">—</div></div>`;
+  $("podio").innerHTML = deg(r[1],"🥈","p2") + deg(r[0],"🥇","p1") + deg(r[2],"🥉","p3");
+  $("ranking").innerHTML = r.length ? r.map((c,i) => `<tr style="cursor:pointer" onclick="abrir('${c.id}')">
+      <td>${i+1}º</td><td>${esc(c.nome)}</td><td>${fmt(num(c.xpIni))}</td><td>${fmt(num(c.xpFim))}</td>
+      <td class="ganho">${fmtGanho(ganho(c))}</td><td>🔥 ${esc(c.ofFim || "—")}</td></tr>`).join("")
+    : `<tr><td colspan="6" class="vazio">O ranking aparece quando as crianças ativas tiverem o XP final preenchido.</td></tr>`;
+}
+
+function render(){ renderResumo(); renderPainel(); renderRanking(); }
+
+/* ---------- relatório / exportação ---------- */
+function imprimir(){
+  const r = rankingLista();
+  const ativas = dados.criancas.filter(c => status(c) === "ativo");
+  const semFim = ativas.filter(c => ganho(c) === null);
+  const total = r.reduce((s,c) => s + ganho(c), 0);
+  $("relatorio").innerHTML = `
+    <h1 style="margin:0">Relatório – Desafio Duolingo Madeirol</h1>
+    <p style="color:#555">Período: ${fmtData(dados.inicio)} a ${fmtData(dados.fim)} · Gerado em ${new Date().toLocaleDateString("pt-BR")}</p>
+    <p><b>${dados.criancas.length}</b> cadastradas · <b>${ativas.length}</b> participaram · <b>${r.length}</b> avaliadas · XP total ganho pelo grupo: <b>${fmt(total)}</b></p>
+    <h2>Pódio</h2>
+    <p style="font-size:18px">🥇 ${r[0] ? esc(r[0].nome) + " (" + fmtGanho(ganho(r[0])) + " XP)" : "—"}<br>
+    🥈 ${r[1] ? esc(r[1].nome) + " (" + fmtGanho(ganho(r[1])) + " XP)" : "—"}<br>
+    🥉 ${r[2] ? esc(r[2].nome) + " (" + fmtGanho(ganho(r[2])) + " XP)" : "—"}</p>
+    <h2>Classificação completa</h2>
+    <table border="1" cellpadding="6" style="border-collapse:collapse;width:100%">
+      <thead><tr><th>#</th><th>Nome</th><th>Usuário</th><th>XP inicial</th><th>XP final</th><th>XP ganho</th><th>Ofensiva final</th></tr></thead><tbody>
+      ${r.map((c,i) => `<tr><td>${i+1}º</td><td>${esc(c.nome)}</td><td>${esc(c.usuario)}</td><td>${fmt(num(c.xpIni))}</td><td>${fmt(num(c.xpFim))}</td><td><b>${fmtGanho(ganho(c))}</b></td><td>${esc(c.ofFim || "—")}</td></tr>`).join("") || `<tr><td colspan="7">Sem dados finais.</td></tr>`}
+    </tbody></table>
+    ${semFim.length ? `<p style="color:#8a6a00">Ativas sem XP final (não avaliadas): ${semFim.map(c => esc(c.nome)).join(", ")}</p>` : ""}
+    <p style="font-size:12px;color:#777;margin-top:24px">Critério: XP ganho no período (XP final − XP inicial). Desempate pela ofensiva final.</p>`;
+  window.print();
+}
+function baixar(nome, conteudo, tipo){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([conteudo], { type: tipo }));
+  a.download = nome; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function exportarCSV(){
+  const L = [["Nome","Usuário","Idade","Curso","Responsável","Telefone","Status","XP inicial","Ofensiva inicial","XP final","Ofensiva final","XP ganho","Observações"]];
+  dados.criancas.forEach(c => { const g = ganho(c);
+    L.push([c.nome,c.usuario,c.idade,c.curso,c.resp,c.tel,NOME_ST[status(c)],c.xpIni,c.ofIni,c.xpFim,c.ofFim,g ?? "",c.obs]); });
+  baixar("desafio-duolingo.csv", "﻿" + L.map(l => l.map(v => `"${String(v ?? "").replace(/"/g,'""')}"`).join(";")).join("\n"), "text/csv;charset=utf-8");
+}
+function exportarJSON(){ baixar("backup-desafio-duolingo-" + new Date().toISOString().slice(0,10) + ".json", JSON.stringify(dados, null, 2), "application/json"); }
+function importarJSON(ev){
+  const f = ev.target.files[0]; if(!f) return;
+  const rd = new FileReader();
+  rd.onload = () => { try{
+      const d = JSON.parse(rd.result); if(!Array.isArray(d.criancas)) throw 0;
+      if(!confirm("Substituir os dados atuais pelo backup?")) return;
+      dados = d; salvar(); iniciarCampos(); render();
+    }catch(e){ alert("Arquivo de backup inválido."); } };
+  rd.readAsText(f); ev.target.value = "";
+}
+function limparTudo(){
+  if(!confirm("Apagar TODOS os dados? Faça um backup antes.")) return;
+  dados = { inicio:"", fim:"", criancas:[] }; salvar(); iniciarCampos(); render();
+}
+function iniciarCampos(){ $("dataInicio").value = dados.inicio || ""; $("dataFim").value = dados.fim || ""; }
+$("dataInicio").onchange = () => { dados.inicio = $("dataInicio").value; salvar(); renderResumo(); };
+$("dataFim").onchange = () => { dados.fim = $("dataFim").value; salvar(); renderResumo(); };
+$("fNome").addEventListener("keydown", e => { if(e.key === "Enter") adicionar(); });
+
+carregar(); iniciarCampos(); render();
+</script>
+</body>
+</html>
