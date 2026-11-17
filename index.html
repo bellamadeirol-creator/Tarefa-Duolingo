@@ -258,6 +258,60 @@
     main{padding:26px 16px}
     .pub{padding-top:36px}
   }
+
+  /* ---------- refinamento ---------- */
+  .app{display:block;min-height:auto}
+  .navbar{background:#fff;border-bottom:1px solid var(--borda);display:flex;align-items:center;justify-content:space-between;padding:0 44px;position:sticky;top:62px;z-index:25}
+  .navbar nav{display:flex;gap:28px}
+  .navbar nav button{background:none;border:0;border-bottom:2px solid transparent;border-radius:0;padding:18px 0 16px;margin:0;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#8a7566;width:auto}
+  .navbar nav button:hover{background:none;color:#4a291a}
+  .navbar nav button.on{background:none;color:#4a291a;border-bottom-color:#4a291a}
+  .quem{display:flex;align-items:center;gap:14px;font-size:12px;color:#8a7566}
+  .quem .sair{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;text-decoration:none;color:#4a291a;padding:0}
+  main{max-width:1180px;margin:0 auto;padding:44px 44px 70px}
+  .topo{align-items:flex-end;margin-bottom:28px}
+  .stats{gap:16px;margin-bottom:24px}
+  .stat{display:block;padding:20px 22px;position:relative}
+  .stat b{font-size:32px;font-weight:300;color:#4a291a;line-height:1}
+  .stat span:not(.tag-st){display:block;margin-top:8px;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8a7566}
+  .tag-st{position:absolute;top:22px;right:22px;width:8px;height:8px;border-radius:50%;background:#c9a27e}
+  .tag-st.ok{background:#3fae2a}.tag-st.pend{background:#e0a800}.tag-st.fora{background:#d64545}
+  .d{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:8px;vertical-align:1px}
+  .d.ok{background:#3fae2a}.d.pend{background:#e0a800}.d.fora{background:#d64545}
+  .chip{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:9px 16px}
+  .chip.on .d{box-shadow:0 0 0 2px #fff}
+  .busca input{background:#fff}
+  .painel{gap:16px}
+  .pessoa{padding:20px;transition:border-color .15s, box-shadow .15s}
+  .pessoa:hover{transform:none;border-color:#d9c3b2;box-shadow:0 20px 44px rgba(74,41,26,.10)}
+  .avatar{width:42px;height:42px;font-size:14px;letter-spacing:.04em}
+  .pessoa .nome{font-size:15px}
+  .pessoa .user{font-size:12px;font-weight:400;margin-top:2px}
+  .ponto{top:22px;right:20px;width:9px;height:9px}
+  .ponto.ativo{animation:none;box-shadow:0 0 0 3px var(--ok-claro)}
+  .ponto.pendente{box-shadow:0 0 0 3px #fff3cc}
+  .ponto.fora{box-shadow:0 0 0 3px #fde8e8}
+  .mini-stats{gap:0;margin-top:18px;border-top:1px solid #f0e8df;padding-top:14px}
+  .mini-stats div{background:none;border-radius:0;padding:0;border-right:1px solid #f0e8df}
+  .mini-stats div:last-child{border-right:0}
+  .mini-stats b{font-size:16px;color:#4a291a}
+  .mini-stats span{font-size:9px;letter-spacing:.16em;margin-top:2px;display:block}
+  .status-txt{margin-top:14px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;padding:5px 10px}
+  .degrau .med{font-size:30px;font-weight:300;color:#c9a27e}
+  .degrau .nome{font-size:15px}
+  .degrau .xp{font-size:14px;letter-spacing:.06em}
+  .degrau.p1{border-color:#c9a27e}
+  .degrau.p1 .med{color:#4a291a;font-weight:700}
+  .modal{border-radius:20px}
+  .modal-topo{border-bottom:1px solid #f0e8df}
+  .destaque b{font-weight:600;color:#4a291a}
+  @media (max-width:860px){
+    .navbar{top:62px;padding:0 16px;overflow-x:auto}
+    .navbar nav{gap:20px}
+    .quem span{display:none}
+    main{padding:26px 16px 60px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+  }
 </style>
 </head>
 <body>
@@ -360,37 +414,33 @@
 
 <!-- ======================= PAINEL ======================= -->
 <div class="app" id="vAdmin" hidden>
-  <aside>
-    <div class="logo">
-      <div class="coruja">M</div>
-      <div><b>Desafio Duolingo</b><small>Madeirol</small></div>
-    </div>
+  <div class="navbar">
     <nav>
-      <button data-aba="painel" class="on"><span class="ico">◉</span>Inscritos</button>
-      <button data-aba="ranking"><span class="ico">◆</span>Ranking</button>
-      <button data-aba="envios"><span class="ico">↗</span>Progressos</button>
+      <button data-aba="painel" class="on">Inscritos</button>
+      <button data-aba="ranking">Ranking</button>
+      <button data-aba="envios">Progressos</button>
     </nav>
-    <div class="periodo">Logado como<b id="quem">—</b><button class="sair" onclick="sair()">Sair</button></div>
-  </aside>
+    <div class="quem"><span id="quem">—</span><button class="sair" onclick="sair()">Sair</button></div>
+  </div>
 
   <main>
     <section class="aba on" id="aba-painel">
       <div class="topo">
         <div><h1>Painel de <b>inscritos</b></h1><p>As inscrições chegam aqui sozinhas. Clique num participante para ver tudo.</p></div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn sec" onclick="carregarTudo()">🔄 Atualizar</button><button class="btn" onclick="abrirZap()">📲 Enviar formulário</button></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn sec" onclick="carregarTudo()">Atualizar</button><button class="btn" onclick="abrirZap()">Enviar formulário</button></div>
       </div>
       <div class="stats">
-        <div class="stat"><div class="bola" style="background:#eef1ea">👥</div><div><b id="sTotal">0</b><span>Inscritos</span></div></div>
-        <div class="stat"><div class="bola" style="background:var(--ok-claro)">🟢</div><div><b id="sAtivas">0</b><span>Início conferido</span></div></div>
-        <div class="stat"><div class="bola" style="background:var(--amarelo-claro)">🟡</div><div><b id="sPend">0</b><span>A conferir</span></div></div>
-        <div class="stat"><div class="bola" style="background:var(--vermelho-claro)">🔴</div><div><b id="sFora">0</b><span>Fora</span></div></div>
+        <div class="stat"><span class="tag-st"></span><b id="sTotal">0</b><span>Inscritos</span></div>
+        <div class="stat"><span class="tag-st ok"></span><b id="sAtivas">0</b><span>Início conferido</span></div>
+        <div class="stat"><span class="tag-st pend"></span><b id="sPend">0</b><span>A conferir</span></div>
+        <div class="stat"><span class="tag-st fora"></span><b id="sFora">0</b><span>Fora do desafio</span></div>
       </div>
       <div class="filtros">
         <div class="busca"><input id="busca" placeholder="Buscar por nome, responsável ou funcionário..."></div>
-        <button class="chip on" data-f="todas">Todas</button>
-        <button class="chip" data-f="ativo">🟢 Conferidas</button>
-        <button class="chip" data-f="pendente">🟡 A conferir</button>
-        <button class="chip" data-f="fora">🔴 Fora</button>
+        <button class="chip on" data-f="todas">Todos</button>
+        <button class="chip" data-f="ativo"><i class="d ok"></i>Conferidos</button>
+        <button class="chip" data-f="pendente"><i class="d pend"></i>A conferir</button>
+        <button class="chip" data-f="fora"><i class="d fora"></i>Fora</button>
       </div>
       <div class="painel" id="painel"><div class="carregando">Carregando...</div></div>
     </section>
@@ -399,8 +449,8 @@
       <div class="topo">
         <div><h1>Ranking do <b>desafio</b></h1><p>Quem avançou mais casas no caminho do Duolingo</p></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn" onclick="imprimir()">🖨️ Relatório (PDF)</button>
-          <button class="btn sec" onclick="exportarCSV()">⬇️ Planilha (CSV)</button>
+          <button class="btn" onclick="imprimir()">Relatório (PDF)</button>
+          <button class="btn sec" onclick="exportarCSV()">Planilha (CSV)</button>
         </div>
       </div>
       <div class="podio" id="podio"></div>
@@ -427,17 +477,17 @@
 <!-- ======================= ENVIAR FORMULÁRIO ======================= -->
 <div class="fundo-modal" id="modalZap" onclick="if(event.target===this)this.classList.remove('on')">
   <div class="modal">
-    <div class="modal-topo"><div class="avatar" style="background:var(--verde)">📲</div><div><h3>Enviar formulário</h3><span class="ajuda" style="margin:0">Mande no grupo do WhatsApp</span></div>
+    <div class="modal-topo"><div><h3>Enviar formulário</h3><span class="ajuda" style="margin:0">Mande no grupo do WhatsApp</span></div>
       <button class="fechar" onclick="document.getElementById('modalZap').classList.remove('on')">✕</button></div>
     <div class="modal-corpo">
       <label>Link do formulário</label>
-      <input id="linkForm" readonly onclick="this.select()">
+      <input id="linkForm" placeholder="Cole aqui o link do Google Forms (o de ENVIAR)" oninput="salvarLinkForm()">
       <div class="secao">Mensagem</div>
       <textarea id="msgZap" rows="12"></textarea>
       <div class="acoes">
-        <button class="btn" onclick="enviarZap()">📲 Abrir no WhatsApp</button>
-        <button class="btn sec" onclick="copiarMsg()">📋 Copiar mensagem</button>
-        <a id="abrirForm" target="_blank" rel="noopener"><button class="btn sec">👀 Ver formulário</button></a>
+        <button class="btn" onclick="enviarZap()">Abrir no WhatsApp</button>
+        <button class="btn sec" onclick="copiarMsg()">Copiar mensagem</button>
+        <a id="abrirForm" target="_blank" rel="noopener"><button class="btn sec">Ver formulário</button></a>
       </div>
       <p class="ajuda" id="copiado" style="margin-top:10px"></p>
     </div>
@@ -477,7 +527,7 @@
       </div>
       <div class="secao">Observações</div>
       <textarea id="mObs" rows="2"></textarea>
-      <div class="acoes"><button class="btn" onclick="salvarFicha()">💾 Salvar</button><span id="mSalvo" class="ajuda" style="margin:auto 0"></span></div>
+      <div class="acoes"><button class="btn" onclick="salvarFicha()">Salvar</button><span id="mSalvo" class="ajuda" style="margin:auto 0"></span></div>
     </div>
     <div class="modal-rodape">
       <span></span>
@@ -498,7 +548,7 @@ const num = v => (v === "" || v == null || isNaN(Number(v))) ? null : Number(v);
 const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim();
 const digitos = s => String(s || "").replace(/\D/g, "").slice(-9);
 const iniciais = n => (n || "?").trim().split(/\s+/).slice(0,2).map(p => p[0]).join("").toUpperCase();
-const CORES = ["#58cc02","#1cb0f6","#ff9600","#ce82ff","#ff4b4b","#2bc0a4","#ffc800","#7c6cff"];
+const CORES = ["#4a291a","#6b4428","#8a5a3b","#a8774f","#b88a63","#5c3a2a","#7b5a45","#94704f"];
 const cor = id => CORES[[...String(id)].reduce((s,c) => s + c.charCodeAt(0), 0) % CORES.length];
 const fmtDataHora = d => d ? new Date(d).toLocaleString("pt-BR", {day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "—";
 
@@ -677,7 +727,7 @@ function renderPainel(){
   const q = norm($("busca").value);
   const lista = inscricoes.filter(c => (filtro === "todas" || status(c) === filtro) &&
     (!q || [c.nome, c.responsavel, c.funcionario].some(v => norm(v).includes(q))));
-  if(!inscricoes.length){ $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1"><div class="big">🏆</div>Nenhuma inscrição ainda.<br>Clique em <b>📲 Enviar formulário</b> para mandar no grupo.</div>`; return; }
+  if(!inscricoes.length){ $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1">Nenhuma inscrição ainda.<br>Clique em <b>Enviar formulário</b> para mandar no grupo.</div>`; return; }
   if(!lista.length){ $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1">Ninguém encontrado com esse filtro.</div>`; return; }
   $("painel").innerHTML = lista.map(c => {
     const s = status(c), a = avanco(c), at = atual(c);
@@ -703,6 +753,7 @@ function renderPainel(){
 /* ---------- ficha ---------- */
 async function urlFoto(caminho){
   if(!caminho) return null;
+  if(caminho.startsWith("drive:")) return "https://drive.google.com/thumbnail?id=" + encodeURIComponent(caminho.slice(6)) + "&sz=w1600";
   const { data } = await sb.storage.from(BUCKET).createSignedUrl(caminho, 3600);
   return data?.signedUrl || null;
 }
@@ -716,7 +767,8 @@ async function abrir(id){
   $("mFotoIni").innerHTML = "Carregando print...";
   const u = await urlFoto(c.foto_inicio);
   if(aberta !== id) return;
-  $("mFotoIni").innerHTML = u ? `<a href="${u}" target="_blank" rel="noopener"><img class="foto-grande" src="${u}" alt="Print do início"></a>` : "Sem print.";
+  const abre = c.foto_inicio && c.foto_inicio.startsWith("drive:") ? "https://drive.google.com/file/d/" + encodeURIComponent(c.foto_inicio.slice(6)) + "/view" : u;
+  $("mFotoIni").innerHTML = u ? `<a href="${abre}" target="_blank" rel="noopener"><img class="foto-grande" src="${u}" alt="Print do início" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'Abrir o print no Google Drive ↗'}))"></a><p class="ajuda" style="margin-top:6px">Se a imagem não aparecer, entre na sua conta Google neste navegador.</p>` : "Sem print.";
   const lista = enviosDe(c);
   if(!lista.length){ $("mEnvios").textContent = "Nenhum progresso enviado ainda."; return; }
   const urls = await Promise.all(lista.map(e => urlFoto(e.foto)));
@@ -730,15 +782,15 @@ function preencherFicha(c){
   $("mAvatar").textContent = iniciais(c.nome); $("mAvatar").style.background = cor(c.id);
   $("mNome").textContent = c.nome;
   $("mStatus").className = "status-txt " + s;
-  $("mStatus").textContent = (s === "ativo" ? "🟢 " : s === "pendente" ? "🟡 " : "🔴 ") + NOME_ST[s];
+  $("mStatus").textContent = NOME_ST[s];
   $("mIni").textContent = posTxt(inicio(c));
   $("mAtual").textContent = posTxt(at) + (at && at.origem === "envio" ? " (enviado)" : at ? " (equipe)" : "");
   $("mAvanco").textContent = avancoTxt(avanco(c));
   const info = [["Idade", c.idade ? c.idade + " anos" : ""],["Idioma", c.idioma],["Responsável", c.responsavel],["WhatsApp", c.telefone],
-    ["Funcionário(a)", c.funcionario],["Já usava o Duolingo", c.ja_usa],["Usuário no Duolingo", c.usuario],["Inscrita em", fmtDataHora(c.criado_em)],["Autorizou", c.autorizado ? "Sim ✅" : "Não"]];
+    ["Funcionário(a)", c.funcionario],["Já usava o Duolingo", c.ja_usa],["Usuário no Duolingo", c.usuario],["Inscrição em", fmtDataHora(c.criado_em)],["Autorizou", c.autorizado ? "Sim" : "Não"]];
   $("mInfo").innerHTML = info.map(([k,v]) => `<div><label>${k}</label><div style="font-weight:800;padding:4px 0 6px">${esc(v || "—")}</div></div>`).join("");
-  $("mConferir").textContent = c.conferido ? "↩️ Desmarcar conferido" : "✅ Confirmar início (print ok)";
-  $("mFora").textContent = c.fora ? "↩️ Voltar ao desafio" : "🚫 Tirar do desafio";
+  $("mConferir").textContent = c.conferido ? "Desmarcar conferido" : "Confirmar início";
+  $("mFora").textContent = c.fora ? "Voltar ao desafio" : "Tirar do desafio";
 }
 async function atualizarCampo(campos){
   const c = inscricoes.find(x => x.id === aberta); if(!c) return false;
@@ -750,7 +802,7 @@ function alternarConferido(){ const c = inscricoes.find(x => x.id === aberta); i
 function alternarFora(){ const c = inscricoes.find(x => x.id === aberta); if(c) atualizarCampo({ fora: !c.fora }); }
 async function salvarFicha(){
   const ok = await atualizarCampo({ f_secao: num($("mFS").value), f_unidade: num($("mFU").value), f_casa: num($("mFC").value), obs: $("mObs").value.trim() || null });
-  if(ok) $("mSalvo").textContent = "✅ Salvo";
+  if(ok) $("mSalvo").textContent = "Salvo";
 }
 async function remover(){
   const c = inscricoes.find(x => x.id === aberta); if(!c) return;
@@ -772,7 +824,7 @@ function renderRanking(){
   const r = rankingLista();
   const deg = (c, med, cls) => c ? `<div class="degrau ${cls}" onclick="abrir('${c.id}')" style="cursor:pointer"><div class="med">${med}</div><div class="nome">${esc(c.nome)}</div><div class="xp">${avancoTxt(avanco(c))}</div></div>`
     : `<div class="degrau ${cls}" style="opacity:.45"><div class="med">${med}</div><div class="nome">—</div></div>`;
-  $("podio").innerHTML = deg(r[1],"🥈","p2") + deg(r[0],"🥇","p1") + deg(r[2],"🥉","p3");
+  $("podio").innerHTML = deg(r[1],"2º","p2") + deg(r[0],"1º","p1") + deg(r[2],"3º","p3");
   $("ranking").innerHTML = r.length ? r.map((c,i) => `<tr style="cursor:pointer" onclick="abrir('${c.id}')"><td>${i+1}º</td><td>${esc(c.nome)}</td><td>${posTxt(inicio(c))}</td><td>${posTxt(atual(c))}</td><td class="ganho">${avancoTxt(avanco(c))}</td></tr>`).join("")
     : `<tr><td colspan="5" class="vazio">O ranking aparece quando houver participantes com início conferido e posição atual.</td></tr>`;
 }
@@ -782,26 +834,27 @@ function renderEnvios(){
   if(!envios.length){ $("listaEnvios").innerHTML = `<div class="vazio">Nenhum progresso enviado ainda.</div>`; return; }
   $("listaEnvios").innerHTML = `<div class="scroll"><table><thead><tr><th>Enviado em</th><th>Nome</th><th>WhatsApp</th><th>Posição</th><th>Inscrição</th></tr></thead><tbody>
     ${envios.map(e => { const c = inscricoes.find(i => enviosDe(i).includes(e));
-      return `<tr ${c ? `style="cursor:pointer" onclick="abrir('${c.id}')"` : ""}><td>${fmtDataHora(e.criado_em)}</td><td>${esc(e.nome)}</td><td>${esc(e.telefone)}</td><td>${posTxt({s:e.secao,u:e.unidade,c:e.casa})}</td><td>${c ? "✅ " + esc(c.nome) : "⚠️ não encontrada"}</td></tr>`; }).join("")}
+      return `<tr ${c ? `style="cursor:pointer" onclick="abrir('${c.id}')"` : ""}><td>${fmtDataHora(e.criado_em)}</td><td>${esc(e.nome)}</td><td>${esc(e.telefone)}</td><td>${posTxt({s:e.secao,u:e.unidade,c:e.casa})}</td><td>${c ? esc(c.nome) : "<span style='color:#b45309'>Não encontrada</span>"}</td></tr>`; }).join("")}
   </tbody></table></div>`;
 }
 
 /* ---------- divulgar ---------- */
 function prepararDivulgar(){
-  const link = location.origin + location.pathname + "?form";
-  $("linkForm").value = link; $("abrirForm").href = link;
-  if(!$("msgZap").value) $("msgZap").value =
+  let link = ""; try{ link = localStorage.getItem("duoLinkForm") || ""; }catch(e){}
+  $("linkForm").value = link; $("abrirForm").href = link || "#";
+  $("msgZap").value =
 `🏆 *Desafio Duolingo Madeirol* 🏆
 
 Olá, pessoal! A Madeirol está lançando um desafio para incentivar o aprendizado de um novo idioma com o Duolingo! 📚
 
 Durante *6 meses* os participantes usam o app e, no final, vamos ver *quem avançou mais casas*. 🏆
 
-Para participar, preencha a inscrição e anexe um print da tela do Duolingo mostrando onde você está (menores de 18, com o responsável):
-👉 ${link}
+Para participar, preencha o formulário e anexe um print da tela do Duolingo mostrando onde você está (menores de 18, com o responsável):
+👉 ${link || "[cole o link do formulário]"}
 
 ⚠️ Só participa quem enviar a inscrição com o print.`;
 }
+function salvarLinkForm(){ try{ localStorage.setItem("duoLinkForm", $("linkForm").value.trim()); }catch(e){} prepararDivulgar(); }
 function abrirZap(){ prepararDivulgar(); $("modalZap").classList.add("on"); }
 function enviarZap(){ window.open("https://wa.me/?text=" + encodeURIComponent($("msgZap").value), "_blank"); }
 async function copiarMsg(){ try{ await navigator.clipboard.writeText($("msgZap").value); $("copiado").textContent = "✅ Mensagem copiada!"; }catch(e){ $("msgZap").select(); $("copiado").textContent = "Selecionei o texto — use Ctrl+C."; } }
