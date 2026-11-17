@@ -4,20 +4,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Desafio Duolingo – Madeirol</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#3f2717">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Desafio Duolingo">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236b4428'/%3E%3Cstop offset='1' stop-color='%23b07a45'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='110' fill='url(%23g)'/%3E%3Cpath d='M176 140h160v54c0 50-36 92-80 92s-80-42-80-92z' fill='%23fff'/%3E%3Cpath d='M176 160h-40c0 46 22 70 48 74M336 160h40c0 46-22 70-48 74' stroke='%23fff' stroke-width='18' fill='none' stroke-linecap='round'/%3E%3Crect x='236' y='284' width='40' height='56' fill='%23fff'/%3E%3Crect x='186' y='340' width='140' height='34' rx='10' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236b4428'/%3E%3Cstop offset='1' stop-color='%23b07a45'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='110' fill='url(%23g)'/%3E%3Cpath d='M176 140h160v54c0 50-36 92-80 92s-80-42-80-92z' fill='%23fff'/%3E%3Cpath d='M176 160h-40c0 46 22 70 48 74M336 160h40c0 46-22 70-48 74' stroke='%23fff' stroke-width='18' fill='none' stroke-linecap='round'/%3E%3Crect x='236' y='284' width='40' height='56' fill='%23fff'/%3E%3Crect x='186' y='340' width='140' height='34' rx='10' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="manifest" id="manifesto">
+<script>
+(function(){try{
+  var base = location.origin + location.pathname;
+  var m = {name:"Desafio Duolingo Madeirol",short_name:"Desafio",start_url:base,scope:base,display:"standalone",background_color:"#f6f2ed",theme_color:"#3f2717",
+    icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236b4428'/%3E%3Cstop offset='1' stop-color='%23b07a45'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='110' fill='url(%23g)'/%3E%3Cpath d='M176 140h160v54c0 50-36 92-80 92s-80-42-80-92z' fill='%23fff'/%3E%3Cpath d='M176 160h-40c0 46 22 70 48 74M336 160h40c0 46-22 70-48 74' stroke='%23fff' stroke-width='18' fill='none' stroke-linecap='round'/%3E%3Crect x='236' y='284' width='40' height='56' fill='%23fff'/%3E%3Crect x='186' y='340' width='140' height='34' rx='10' fill='%23fff'/%3E%3C/svg%3E",sizes:"512x512",type:"image/svg+xml",purpose:"any"}]};
+  document.getElementById("manifesto").href = URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));
+}catch(e){}})();
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   [hidden]{display:none!important}
   :root{
-    --verde:#58cc02; --verde-esc:#3f9a00; --verde-claro:#eafbdc;
+    --verde:#4a291a; --verde-esc:#4a291a; --verde-claro:#f3ebe3; --cobre:#c9a27e; --ok:#3fae2a; --ok-claro:#e3f6dc;
     --amarelo:#ffb800; --amarelo-claro:#fff4d6;
     --vermelho:#ef4444; --vermelho-claro:#fde8e8;
-    --fundo:#f3f5f0; --card:#ffffff; --texto:#1f2a1a; --cinza:#6b7466; --borda:#e4e8df;
-    --sombra:0 2px 0 #e1e5dc, 0 8px 24px rgba(30,50,20,.06);
+    --fundo:#f9f6f1; --card:#ffffff; --texto:#3a2216; --cinza:#8a7566; --borda:#eadfd5;
+    --sombra:0 1px 0 #ebe3da, 0 8px 24px rgba(60,35,15,.06);
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:"Nunito","Segoe UI",Arial,sans-serif;background:var(--fundo);color:var(--texto)}
+  body{margin:0;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;background:var(--fundo);color:var(--texto)}
   button{font-family:inherit}
 
   /* ---------- layout ---------- */
@@ -29,7 +44,7 @@
   .logo small{color:var(--cinza);font-size:12px;font-weight:700}
   nav button{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;margin-bottom:4px;border:2px solid transparent;border-radius:12px;background:none;font-size:15px;font-weight:800;color:var(--cinza);cursor:pointer;text-align:left}
   nav button:hover{background:#f5f7f2}
-  nav button.on{background:var(--verde-claro);border-color:#bfeca0;color:var(--verde-esc)}
+  nav button.on{background:var(--verde-claro);border-color:#e2cdb6;color:var(--verde-esc)}
   nav .ico{font-size:20px;width:24px;text-align:center}
   .periodo{margin-top:auto;padding:14px;border-radius:12px;background:#f7f9f4;font-size:12px;color:var(--cinza);font-weight:700}
   .periodo b{color:var(--texto);display:block;font-size:13px;margin-top:2px}
@@ -73,23 +88,23 @@
   /* ---------- painel de cards ---------- */
   .painel{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
   .pessoa{background:#fff;border-radius:18px;padding:18px;box-shadow:var(--sombra);cursor:pointer;border:2px solid transparent;transition:border-color .15s, transform .15s;position:relative}
-  .pessoa:hover{border-color:#bfeca0;transform:translateY(-2px)}
+  .pessoa:hover{border-color:#e2cdb6;transform:translateY(-2px)}
   .pessoa .linha1{display:flex;align-items:center;gap:12px}
   .avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:17px;color:#fff;flex-shrink:0}
   .pessoa .nome{font-weight:900;font-size:16px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .pessoa .user{font-size:13px;color:var(--cinza);font-weight:700}
   .ponto{position:absolute;top:16px;right:16px;width:14px;height:14px;border-radius:50%}
-  .ponto.ativo{background:var(--verde);box-shadow:0 0 0 4px var(--verde-claro)}
+  .ponto.ativo{background:var(--ok);box-shadow:0 0 0 4px var(--ok-claro)}
   .ponto.pendente{background:var(--amarelo);box-shadow:0 0 0 4px var(--amarelo-claro)}
   .ponto.fora{background:var(--vermelho);box-shadow:0 0 0 4px var(--vermelho-claro)}
   .ponto.ativo{animation:pulsa 2s infinite}
-  @keyframes pulsa{0%,100%{box-shadow:0 0 0 4px var(--verde-claro)}50%{box-shadow:0 0 0 7px var(--verde-claro)}}
+  @keyframes pulsa{0%,100%{box-shadow:0 0 0 4px var(--ok-claro)}50%{box-shadow:0 0 0 7px var(--ok-claro)}}
   .mini-stats{display:flex;gap:8px;margin-top:14px}
   .mini-stats div{flex:1;background:#f7f9f4;border-radius:10px;padding:8px;text-align:center}
   .mini-stats b{display:block;font-size:15px;font-weight:900}
   .mini-stats span{font-size:11px;color:var(--cinza);font-weight:800;text-transform:uppercase}
   .status-txt{display:inline-block;margin-top:12px;font-size:12px;font-weight:800;padding:4px 10px;border-radius:99px}
-  .status-txt.ativo{background:var(--verde-claro);color:var(--verde-esc)}
+  .status-txt.ativo{background:var(--ok-claro);color:#2f7d00}
   .status-txt.pendente{background:var(--amarelo-claro);color:#9a6b00}
   .status-txt.fora{background:var(--vermelho-claro);color:#b42323}
   .vazio{text-align:center;padding:50px 20px;color:var(--cinza);font-weight:700}
@@ -158,7 +173,7 @@
   select:focus,textarea:focus{outline:none;border-color:var(--verde)}
   .campo{margin-bottom:14px}
   .linha3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .foto-box{border:2px dashed #bfeca0;background:#f8fdf3;border-radius:14px;padding:18px;text-align:center;cursor:pointer}
+  .foto-box{border:2px dashed #e2cdb6;background:#fbf7f2;border-radius:14px;padding:18px;text-align:center;cursor:pointer}
   .foto-box img{max-width:100%;max-height:260px;border-radius:10px;margin-top:10px;display:block;margin-inline:auto}
   .check{display:flex;gap:10px;align-items:flex-start;font-weight:700;font-size:14px;cursor:pointer}
   .check input{width:22px;height:22px;flex-shrink:0;margin-top:1px;accent-color:var(--verde)}
@@ -174,14 +189,84 @@
   .atualiz img{width:64px;height:64px;object-fit:cover;border-radius:8px;cursor:zoom-in}
   .sair{margin-top:10px;border:0;background:none;color:var(--cinza);font-weight:800;cursor:pointer;text-decoration:underline;padding:0 10px;text-align:left}
   .carregando{text-align:center;padding:40px;color:var(--cinza);font-weight:800}
+
+
+  /* ---------- padrão Madeirol (igual ao app de lembretes) ---------- */
+  body{background:var(--fundo);color:var(--texto);-webkit-font-smoothing:antialiased}
+  .topbar{background:#4a291a;color:#f3e9dc;height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 44px;position:sticky;top:0;z-index:30}
+  .topbar .marca{font-size:21px;letter-spacing:.06em;font-weight:400}
+  .topbar .sec{display:flex;align-items:center;gap:14px;font-size:10px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#f3e9dc}
+  .topbar .sec::before{content:"";width:22px;height:1px;background:#c9a27e}
+  .app{min-height:calc(100vh - 62px)}
+  aside{background:#fff;border-right:1px solid var(--borda);top:62px;height:calc(100vh - 62px);padding:26px 16px}
+  .logo{display:none}
+  nav button{color:#6b4a3a;font-weight:600;font-size:14px;border:0;border-radius:999px;padding:11px 16px}
+  nav button:hover{background:#f6efe8}
+  nav button.on{background:#4a291a;color:#fff;border:0}
+  nav .ico{font-size:16px}
+  .periodo{background:#f9f6f1;color:var(--cinza);border:1px solid var(--borda);font-weight:600}.periodo b{color:var(--texto)}
+  .sair{color:#6b4a3a}
+  main{padding:44px 48px}
+  .topo h1,.pub-topo h1{font-weight:400;color:#4a291a;font-size:34px;letter-spacing:-.01em;margin:0}
+  .topo h1 b,.pub-topo h1 b{font-weight:700}
+  .topo p,.pub-topo p{color:#6b4a3a;font-weight:400;font-size:13px;margin-top:6px}
+  .pub{max-width:400px;padding-top:70px}
+  .pub.largo{max-width:640px}
+  .pub-topo{text-align:left;margin-bottom:22px}
+  .pub-topo .coruja{display:none}
+  .card,.stat,.pessoa,.degrau{border:1px solid #efe6dc;border-radius:18px;box-shadow:0 18px 40px rgba(74,41,26,.06)}
+  .card{padding:26px}
+  .card h2{font-weight:700;color:#4a291a;font-size:17px}
+  .modal-topo h3{color:#4a291a;font-weight:700}
+  label{font-size:10px;letter-spacing:.2em;color:#6b4a3a;font-weight:700}
+  input,select,textarea{background:#faf5f0;border:1px solid #e6d5c8;border-radius:10px;font-weight:400;font-size:14px;padding:11px 12px}
+  input:focus,select:focus,textarea:focus{border-color:#4a291a;box-shadow:0 0 0 3px rgba(74,41,26,.08);background:#fff}
+  .btn{background:#4a291a;border-radius:999px;box-shadow:none;text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;padding:12px 22px}
+  .btn:active{transform:translateY(1px);box-shadow:none}
+  .btn:hover{background:#5c3524}
+  .btn.sec{background:#fff;color:#4a291a;border:1px solid #e6d5c8;box-shadow:none}
+  .btn.sec:hover{background:#f9f6f1}
+  .btn.perigo{background:#fff;border:1px solid #f0c9c9;box-shadow:none}
+  .btn.full{width:auto;padding:13px 26px;font-size:12px}
+  .btn.peq{padding:9px 16px;font-size:11px}
+  .tabs{border:1px solid #efe6dc;box-shadow:none;border-radius:999px}
+  .tabs button{border-radius:999px;font-weight:700;font-size:12px;letter-spacing:.06em}
+  .tabs button.on{background:#4a291a}
+  .chip{border:1px solid #e6d5c8;border-radius:999px;font-weight:600;color:#6b4a3a}
+  .chip.on{background:#4a291a;color:#fff;border-color:#4a291a}
+  .stat b{font-weight:700;color:#4a291a}
+  .stat span,.mini-stats span{font-weight:600}
+  .pessoa .nome{font-weight:700;color:#3a2216}
+  .mini-stats div,.destaque div{background:#f9f6f1}
+  .mini-stats b{font-weight:700}
+  .secao{font-size:10px;letter-spacing:.2em;color:#6b4a3a}
+  .ajuda{font-weight:400}
+  .dica{background:#f9f6f1;color:#6b4a3a;font-weight:400;border:1px solid #efe6dc}
+  .foto-box{border:1px dashed #d9c3b2;background:#faf5f0}
+  .foto-box div{color:#4a291a!important}
+  .ganho,.degrau .xp,.destaque div.g b{color:#4a291a}
+  .destaque div.g{background:#f3ebe3}
+  .avatar{font-weight:700}
+  th{font-weight:700;letter-spacing:.14em;font-size:10px}
+  td{font-weight:400}
+  .fechar{background:#f9f6f1}
+  .vazio{font-weight:400}
+  @media (max-width:860px){
+    .topbar{padding:0 18px}
+    .topbar .sec{font-size:9px;letter-spacing:.16em}
+    aside{position:sticky;top:62px;height:auto;padding:10px;border-right:0;border-bottom:1px solid var(--borda)}
+    main{padding:26px 16px}
+    .pub{padding-top:36px}
+  }
 </style>
 </head>
 <body>
+<header class="topbar"><span class="marca">MADEIROL</span><span class="sec">Desafio Duolingo</span></header>
 <!-- ======================= PÚBLICO ======================= -->
-<div id="vPublico" class="pub">
+
+<div id="vPublico" class="pub largo" hidden>
   <div class="pub-topo">
-    <div class="coruja">🦉</div>
-    <h1>Desafio Duolingo Madeirol</h1>
+    <h1>Desafio <b>Duolingo</b></h1>
     <p>6 meses aprendendo um idioma — quem avançar mais casas ganha! 🏆</p>
   </div>
 
@@ -192,24 +277,24 @@
 
   <!-- Inscrição -->
   <form class="card" id="formInsc" autocomplete="on">
-    <h2>Inscrição da criança</h2>
-    <p class="ajuda">Preenchido pelo responsável. Só participa quem enviar este formulário com o print.</p>
-    <div class="campo"><label>Nome completo da criança *</label><input name="nome" required maxlength="120"></div>
+    <h2>Inscrição</h2>
+    <p class="ajuda">Menores de 18 anos: preencha junto com o responsável. Só participa quem enviar a inscrição com o print.</p>
+    <div class="campo"><label>Nome completo do participante *</label><input name="nome" required maxlength="120"></div>
     <div class="grid">
-      <div class="campo"><label>Idade *</label><input name="idade" type="number" min="2" max="18" required></div>
+      <div class="campo"><label>Idade *</label><input name="idade" type="number" min="2" max="99" required></div>
       <div class="campo"><label>Idioma *</label>
         <select name="idioma" required><option value="">Escolha...</option><option>Inglês</option><option>Espanhol</option><option>Francês</option><option>Italiano</option><option>Alemão</option><option>Outro</option></select></div>
     </div>
-    <div class="campo"><label>Nome do responsável *</label><input name="responsavel" required maxlength="120"></div>
-    <div class="campo"><label>WhatsApp do responsável *</label><input name="telefone" type="tel" required maxlength="30" placeholder="(21) 9...."></div>
-    <div class="campo"><label>Funcionário(a) da Madeirol ligado à criança</label><input name="funcionario" maxlength="120" placeholder="Ex.: Pablo (pai)"></div>
+    <div class="campo"><label>Nome do responsável (se menor de 18)</label><input name="responsavel" maxlength="120"></div>
+    <div class="campo"><label>WhatsApp para contato *</label><input name="telefone" type="tel" required maxlength="30" placeholder="(21) 9...."></div>
+    <div class="campo"><label>Funcionário(a) da Madeirol ligado ao participante</label><input name="funcionario" maxlength="120" placeholder="Ex.: Pablo (pai)"></div>
     <div class="grid">
       <div class="campo"><label>Já usava o Duolingo? *</label><select name="ja_usa" required><option value="">Escolha...</option><option>Não</option><option>Sim</option></select></div>
       <div class="campo"><label>Usuário no Duolingo</label><input name="usuario" maxlength="60" placeholder="opcional"></div>
     </div>
 
-    <div class="secao">Onde a criança está hoje no Duolingo</div>
-    <div class="dica">Abra o Duolingo na tela de lições. No topo aparece a <b>Seção</b> e a <b>Unidade</b>. A <b>casa</b> é a bolinha onde ela está dentro da unidade (contando de cima pra baixo). Quem está começando agora: Seção 1, Unidade 1, Casa 1.</div>
+    <div class="secao">Onde você está hoje no Duolingo</div>
+    <div class="dica">Abra o Duolingo na tela de lições. No topo aparece a <b>Seção</b> e a <b>Unidade</b>. A <b>casa</b> é a bolinha onde você está dentro da unidade (contando de cima pra baixo). Quem está começando agora: Seção 1, Unidade 1, Casa 1.</div>
     <div class="linha3">
       <div class="campo"><label>Seção *</label><input name="secao" type="number" min="0" max="50" required></div>
       <div class="campo"><label>Unidade *</label><input name="unidade" type="number" min="0" max="500" required></div>
@@ -225,7 +310,7 @@
 
     <div class="campo" style="margin-top:18px">
       <label class="check" style="text-transform:none;letter-spacing:0;color:var(--texto)"><input type="checkbox" name="autorizado" required>
-      Sou o responsável e autorizo a participação da criança no Desafio Duolingo e o uso destas informações pela Madeirol apenas para este desafio.</label>
+      Autorizo a participação no Desafio Duolingo e o uso destas informações pela Madeirol apenas para este desafio (se menor de 18, autorização do responsável).</label>
     </div>
     <button class="btn full" type="submit" id="btnInsc">Enviar inscrição</button>
     <div class="msg-erro" id="erroInsc"></div>
@@ -234,10 +319,10 @@
   <!-- Progresso -->
   <form class="card" id="formProg" hidden>
     <h2>Enviar progresso</h2>
-    <p class="ajuda">Use quando a equipe pedir (por exemplo, no fim dos 6 meses). Use o mesmo nome e WhatsApp da inscrição.</p>
-    <div class="campo"><label>Nome completo da criança *</label><input name="nome" required maxlength="120"></div>
-    <div class="campo"><label>WhatsApp do responsável *</label><input name="telefone" type="tel" required maxlength="30"></div>
-    <div class="secao">Onde a criança está agora</div>
+    <p class="ajuda">Use quando a equipe pedir (por exemplo, no fim dos 6 meses), com o mesmo nome e WhatsApp da inscrição.</p>
+    <div class="campo"><label>Nome completo do participante *</label><input name="nome" required maxlength="120"></div>
+    <div class="campo"><label>WhatsApp da inscrição *</label><input name="telefone" type="tel" required maxlength="30"></div>
+    <div class="secao">Onde você está agora</div>
     <div class="linha3">
       <div class="campo"><label>Seção</label><input name="secao" type="number" min="0" max="50"></div>
       <div class="campo"><label>Unidade *</label><input name="unidade" type="number" min="0" max="500" required></div>
@@ -256,37 +341,34 @@
   <div class="card ok-tela" id="okTela" hidden>
     <div class="big">🎉</div>
     <h2 id="okTitulo">Inscrição enviada!</h2>
-    <p class="ajuda" id="okTexto">Agora é só estudar todo dia no Duolingo. Boa sorte! 🦉</p>
+    <p class="ajuda" id="okTexto">Agora é só estudar todo dia no Duolingo. Boa sorte! 🍀</p>
     <button class="btn sec" onclick="voltarForm()">Enviar outra</button>
   </div>
 
-  <a class="link-equipe" onclick="mostrar('login')">🔒 Área da equipe</a>
 </div>
 
 <!-- ======================= LOGIN ======================= -->
-<div id="vLogin" class="pub" hidden>
-  <div class="pub-topo"><div class="coruja">🔒</div><h1>Área da equipe</h1><p>Painel de controle do desafio</p></div>
+<div id="vLogin" class="pub">
+  <div class="pub-topo"><h1>Desafio <b>Duolingo</b></h1><p>Entre com o seu e-mail e senha. Depois o app abre direto nos inscritos.</p></div>
   <form class="card" id="formLogin">
     <div class="campo"><label>E-mail</label><input name="email" type="email" required autocomplete="username"></div>
     <div class="campo"><label>Senha</label><input name="senha" type="password" required autocomplete="current-password"></div>
     <button class="btn full" type="submit" id="btnLogin">Entrar</button>
     <div class="msg-erro" id="erroLogin"></div>
   </form>
-  <a class="link-equipe" onclick="mostrar('publico')">← Voltar ao formulário</a>
 </div>
 
 <!-- ======================= PAINEL ======================= -->
 <div class="app" id="vAdmin" hidden>
   <aside>
     <div class="logo">
-      <div class="coruja">🦉</div>
+      <div class="coruja">M</div>
       <div><b>Desafio Duolingo</b><small>Madeirol</small></div>
     </div>
     <nav>
-      <button data-aba="painel" class="on"><span class="ico">🏠</span>Painel</button>
-      <button data-aba="ranking"><span class="ico">🏆</span>Ranking</button>
-      <button data-aba="envios"><span class="ico">📈</span>Progressos</button>
-      <button data-aba="divulgar"><span class="ico">📣</span>Divulgar</button>
+      <button data-aba="painel" class="on"><span class="ico">◉</span>Inscritos</button>
+      <button data-aba="ranking"><span class="ico">◆</span>Ranking</button>
+      <button data-aba="envios"><span class="ico">↗</span>Progressos</button>
     </nav>
     <div class="periodo">Logado como<b id="quem">—</b><button class="sair" onclick="sair()">Sair</button></div>
   </aside>
@@ -294,12 +376,12 @@
   <main>
     <section class="aba on" id="aba-painel">
       <div class="topo">
-        <div><h1>Painel de controle</h1><p>As inscrições chegam aqui sozinhas. Clique numa criança para ver tudo.</p></div>
-        <button class="btn sec" onclick="carregarTudo()">🔄 Atualizar</button>
+        <div><h1>Painel de <b>inscritos</b></h1><p>As inscrições chegam aqui sozinhas. Clique num participante para ver tudo.</p></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn sec" onclick="carregarTudo()">🔄 Atualizar</button><button class="btn" onclick="abrirZap()">📲 Enviar formulário</button></div>
       </div>
       <div class="stats">
-        <div class="stat"><div class="bola" style="background:#eef1ea">👥</div><div><b id="sTotal">0</b><span>Inscritas</span></div></div>
-        <div class="stat"><div class="bola" style="background:var(--verde-claro)">🟢</div><div><b id="sAtivas">0</b><span>Início conferido</span></div></div>
+        <div class="stat"><div class="bola" style="background:#eef1ea">👥</div><div><b id="sTotal">0</b><span>Inscritos</span></div></div>
+        <div class="stat"><div class="bola" style="background:var(--ok-claro)">🟢</div><div><b id="sAtivas">0</b><span>Início conferido</span></div></div>
         <div class="stat"><div class="bola" style="background:var(--amarelo-claro)">🟡</div><div><b id="sPend">0</b><span>A conferir</span></div></div>
         <div class="stat"><div class="bola" style="background:var(--vermelho-claro)">🔴</div><div><b id="sFora">0</b><span>Fora</span></div></div>
       </div>
@@ -315,7 +397,7 @@
 
     <section class="aba" id="aba-ranking">
       <div class="topo">
-        <div><h1>Ranking</h1><p>Quem avançou mais casas no caminho do Duolingo</p></div>
+        <div><h1>Ranking do <b>desafio</b></h1><p>Quem avançou mais casas no caminho do Duolingo</p></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn" onclick="imprimir()">🖨️ Relatório (PDF)</button>
           <button class="btn sec" onclick="exportarCSV()">⬇️ Planilha (CSV)</button>
@@ -324,7 +406,7 @@
       <div class="podio" id="podio"></div>
       <div class="card">
         <h2>Classificação completa</h2>
-        <p class="ajuda">Entram as crianças com início conferido e posição atual (pelo envio de progresso ou anotada pela equipe). Critério: unidades avançadas; empate → casas.</p>
+        <p class="ajuda">Entram os participantes com início conferido e posição atual (pelo envio de progresso ou anotada pela equipe). Critério: unidades avançadas; empate → casas.</p>
         <div class="scroll"><table>
           <thead><tr><th>#</th><th>Nome</th><th>Início</th><th>Atual</th><th>Avanço</th></tr></thead>
           <tbody id="ranking"></tbody>
@@ -333,28 +415,33 @@
     </section>
 
     <section class="aba" id="aba-envios">
-      <div class="topo"><div><h1>Progressos enviados</h1><p>Tudo o que os responsáveis enviaram pela aba "Enviar progresso"</p></div></div>
+      <div class="topo"><div><h1>Progressos <b>enviados</b></h1><p>Tudo o que os responsáveis enviaram pela aba "Enviar progresso"</p></div></div>
       <div class="card"><div id="listaEnvios"></div></div>
     </section>
 
-    <section class="aba" id="aba-divulgar">
-      <div class="topo"><div><h1>Divulgar</h1><p>Mande o link do formulário no grupo</p></div></div>
-      <div class="card">
-        <h2>Link do formulário</h2>
-        <p class="ajuda">É este mesmo site. Quem abrir vê só o formulário — o painel fica protegido pelo login.</p>
-        <input id="linkForm" readonly>
-        <div class="secao">Mensagem</div>
-        <textarea id="msgZap" rows="11"></textarea>
-        <div class="acoes">
-          <button class="btn" onclick="enviarZap()">📲 Enviar no WhatsApp</button>
-          <button class="btn sec" onclick="copiarMsg()">📋 Copiar mensagem</button>
-        </div>
-        <p class="ajuda" id="copiado" style="margin-top:10px"></p>
-      </div>
-    </section>
 
     <div id="relatorio"></div>
   </main>
+</div>
+
+<!-- ======================= ENVIAR FORMULÁRIO ======================= -->
+<div class="fundo-modal" id="modalZap" onclick="if(event.target===this)this.classList.remove('on')">
+  <div class="modal">
+    <div class="modal-topo"><div class="avatar" style="background:var(--verde)">📲</div><div><h3>Enviar formulário</h3><span class="ajuda" style="margin:0">Mande no grupo do WhatsApp</span></div>
+      <button class="fechar" onclick="document.getElementById('modalZap').classList.remove('on')">✕</button></div>
+    <div class="modal-corpo">
+      <label>Link do formulário</label>
+      <input id="linkForm" readonly onclick="this.select()">
+      <div class="secao">Mensagem</div>
+      <textarea id="msgZap" rows="12"></textarea>
+      <div class="acoes">
+        <button class="btn" onclick="enviarZap()">📲 Abrir no WhatsApp</button>
+        <button class="btn sec" onclick="copiarMsg()">📋 Copiar mensagem</button>
+        <a id="abrirForm" target="_blank" rel="noopener"><button class="btn sec">👀 Ver formulário</button></a>
+      </div>
+      <p class="ajuda" id="copiado" style="margin-top:10px"></p>
+    </div>
+  </div>
 </div>
 
 <!-- ======================= FICHA ======================= -->
@@ -483,7 +570,7 @@ $("formInsc").onsubmit = async e => {
     });
     if(error) throw error;
     f.reset(); fotos.insc = null; $("fotoInscPrev").hidden = true; $("fotoInscTxt").textContent = "📷 Toque para anexar o print da tela do Duolingo";
-    sucesso("Inscrição enviada! 🎉", "Agora é só estudar todo dia no Duolingo. Boa sorte! 🦉");
+    sucesso("Inscrição enviada! 🎉", "Agora é só estudar todo dia no Duolingo. Boa sorte! 🍀");
   }catch(err){
     console.error(err);
     $("erroInsc").textContent = "Não foi possível enviar. Confira os campos e a internet e tente de novo.";
@@ -521,7 +608,7 @@ $("formLogin").onsubmit = async e => {
   if(error){ $("erroLogin").textContent = "E-mail ou senha incorretos."; return; }
   e.target.reset(); entrarPainel();
 };
-async function sair(){ await sb.auth.signOut(); mostrar("publico"); }
+async function sair(){ await sb.auth.signOut(); mostrar("login"); }
 
 /* ======================= PAINEL ======================= */
 let inscricoes = [], envios = [], filtro = "todas", aberta = null;
@@ -530,7 +617,7 @@ async function entrarPainel(){
   const { data:{ session } } = await sb.auth.getSession();
   if(!session){ mostrar("login"); return; }
   $("quem").textContent = session.user.email;
-  mostrar("admin"); prepararDivulgar(); carregarTudo();
+  mostrar("admin"); carregarTudo();
 }
 async function carregarTudo(){
   const [a, b] = await Promise.all([
@@ -590,7 +677,7 @@ function renderPainel(){
   const q = norm($("busca").value);
   const lista = inscricoes.filter(c => (filtro === "todas" || status(c) === filtro) &&
     (!q || [c.nome, c.responsavel, c.funcionario].some(v => norm(v).includes(q))));
-  if(!inscricoes.length){ $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1"><div class="big">🦉</div>Nenhuma inscrição ainda.<br>Mande o link na aba <b>Divulgar</b>.</div>`; return; }
+  if(!inscricoes.length){ $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1"><div class="big">🏆</div>Nenhuma inscrição ainda.<br>Clique em <b>📲 Enviar formulário</b> para mandar no grupo.</div>`; return; }
   if(!lista.length){ $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1">Ninguém encontrado com esse filtro.</div>`; return; }
   $("painel").innerHTML = lista.map(c => {
     const s = status(c), a = avanco(c), at = atual(c);
@@ -687,7 +774,7 @@ function renderRanking(){
     : `<div class="degrau ${cls}" style="opacity:.45"><div class="med">${med}</div><div class="nome">—</div></div>`;
   $("podio").innerHTML = deg(r[1],"🥈","p2") + deg(r[0],"🥇","p1") + deg(r[2],"🥉","p3");
   $("ranking").innerHTML = r.length ? r.map((c,i) => `<tr style="cursor:pointer" onclick="abrir('${c.id}')"><td>${i+1}º</td><td>${esc(c.nome)}</td><td>${posTxt(inicio(c))}</td><td>${posTxt(atual(c))}</td><td class="ganho">${avancoTxt(avanco(c))}</td></tr>`).join("")
-    : `<tr><td colspan="5" class="vazio">O ranking aparece quando houver crianças com início conferido e posição atual.</td></tr>`;
+    : `<tr><td colspan="5" class="vazio">O ranking aparece quando houver participantes com início conferido e posição atual.</td></tr>`;
 }
 
 /* ---------- progressos ---------- */
@@ -701,20 +788,21 @@ function renderEnvios(){
 
 /* ---------- divulgar ---------- */
 function prepararDivulgar(){
-  const link = location.origin + location.pathname;
-  $("linkForm").value = link;
+  const link = location.origin + location.pathname + "?form";
+  $("linkForm").value = link; $("abrirForm").href = link;
   if(!$("msgZap").value) $("msgZap").value =
-`🦉 *Desafio Duolingo Madeirol* 🦉
+`🏆 *Desafio Duolingo Madeirol* 🏆
 
-Olá, pessoal! A Madeirol está lançando um desafio para incentivar as crianças a aprenderem um novo idioma com o Duolingo! 📚
+Olá, pessoal! A Madeirol está lançando um desafio para incentivar o aprendizado de um novo idioma com o Duolingo! 📚
 
-Durante *6 meses* as crianças usam o app e, no final, vamos ver *quem avançou mais casas*. 🏆
+Durante *6 meses* os participantes usam o app e, no final, vamos ver *quem avançou mais casas*. 🏆
 
-Para participar, o *responsável* preenche a inscrição e anexa um print da tela do Duolingo mostrando onde a criança está:
+Para participar, preencha a inscrição e anexe um print da tela do Duolingo mostrando onde você está (menores de 18, com o responsável):
 👉 ${link}
 
 ⚠️ Só participa quem enviar a inscrição com o print.`;
 }
+function abrirZap(){ prepararDivulgar(); $("modalZap").classList.add("on"); }
 function enviarZap(){ window.open("https://wa.me/?text=" + encodeURIComponent($("msgZap").value), "_blank"); }
 async function copiarMsg(){ try{ await navigator.clipboard.writeText($("msgZap").value); $("copiado").textContent = "✅ Mensagem copiada!"; }catch(e){ $("msgZap").select(); $("copiado").textContent = "Selecionei o texto — use Ctrl+C."; } }
 
@@ -724,7 +812,7 @@ function imprimir(){
   const lp = (c, m) => m + " " + (c ? esc(c.nome) + " (" + avancoTxt(avanco(c)) + ")" : "—");
   $("relatorio").innerHTML = `<h1 style="margin:0">Relatório – Desafio Duolingo Madeirol</h1>
     <p style="color:#555">Gerado em ${new Date().toLocaleDateString("pt-BR")}</p>
-    <p><b>${inscricoes.length}</b> inscritas · <b>${ativas.length}</b> com início conferido · <b>${r.length}</b> avaliadas</p>
+    <p><b>${inscricoes.length}</b> inscritos · <b>${ativas.length}</b> com início conferido · <b>${r.length}</b> avaliadas</p>
     <h2>Pódio</h2><p style="font-size:18px">${lp(r[0],"🥇")}<br>${lp(r[1],"🥈")}<br>${lp(r[2],"🥉")}</p>
     <h2>Classificação completa</h2>
     <table border="1" cellpadding="6" style="border-collapse:collapse;width:100%"><thead><tr><th>#</th><th>Nome</th><th>Idade</th><th>Início</th><th>Atual</th><th>Avanço</th></tr></thead><tbody>
@@ -744,8 +832,10 @@ function exportarCSV(){
 
 /* ======================= INÍCIO ======================= */
 (async () => {
+  const p = new URLSearchParams(location.search);
+  if(p.has("form")){ mostrar("publico"); return; }
   const { data:{ session } } = await sb.auth.getSession();
-  if(session) entrarPainel(); else mostrar("publico");
+  if(session) entrarPainel(); else mostrar("login");
 })();
 
 </script>
