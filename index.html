@@ -189,22 +189,24 @@
 
     <!-- ================= CADASTRO ================= -->
     <section class="aba" id="aba-cadastro">
-      <div class="topo"><div><h1>Cadastrar criança</h1><p>Peça só o usuário do Duolingo — não precisa de senha</p></div></div>
+      <div class="topo"><div><h1>Cadastrar criança</h1><p>Anote onde a criança está no caminho do Duolingo hoje</p></div></div>
       <div class="card">
         <h2>Dados da criança</h2>
-        <p class="ajuda">O usuário aparece no app, na aba <b>Perfil</b>, logo abaixo do nome.</p>
+        <p class="ajuda">Peça pra criança abrir o Duolingo na sua frente. No topo da tela de lições aparece a <b>Seção</b> e a <b>Unidade</b>; a <b>casa</b> é a bolinha onde ela está dentro da unidade (conte de cima pra baixo).</p>
         <div class="grid">
           <div><label>Nome *</label><input id="fNome" placeholder="Ex.: João Silva"></div>
-          <div><label>Usuário do Duolingo</label><input id="fUser" placeholder="Ex.: joaozinho123"></div>
           <div><label>Idade</label><input id="fIdade" type="number" min="0" placeholder="Ex.: 10"></div>
           <div><label>Responsável</label><input id="fResp" placeholder="Ex.: Maria Silva"></div>
           <div><label>Telefone</label><input id="fTel" placeholder="(21) 9...."></div>
           <div><label>Curso / idioma</label><input id="fCurso" placeholder="Ex.: Inglês"></div>
+          <div><label>Usuário do Duolingo (opcional)</label><input id="fUser" placeholder="Ex.: joaozinho123"></div>
         </div>
-        <div class="secao">Ponto de partida (veja no perfil do Duolingo)</div>
+        <div class="secao">Ponto de partida — onde ela está hoje</div>
         <div class="grid">
-          <div><label>XP inicial</label><input id="fXpIni" type="number" min="0" placeholder="Ex.: 1250"></div>
-          <div><label>Ofensiva inicial (dias)</label><input id="fOfIni" type="number" min="0" placeholder="Ex.: 12"></div>
+          <div><label>Seção</label><input id="fIS" type="number" min="1" placeholder="Ex.: 1"></div>
+          <div><label>Unidade</label><input id="fIU" type="number" min="1" placeholder="Ex.: 3"></div>
+          <div><label>Casa (lição na unidade)</label><input id="fIC" type="number" min="0" placeholder="Ex.: 4"></div>
+          <div><label>XP total (opcional)</label><input id="fIX" type="number" min="0" placeholder="Ex.: 1250"></div>
         </div>
         <div class="acoes"><button class="btn" onclick="adicionar()">Adicionar criança</button></div>
       </div>
@@ -213,7 +215,7 @@
     <!-- ================= RANKING ================= -->
     <section class="aba" id="aba-ranking">
       <div class="topo">
-        <div><h1>Ranking</h1><p>Quem mais ganhou XP no período · desempate pela ofensiva</p></div>
+        <div><h1>Ranking</h1><p>Quem avançou mais casas no caminho do Duolingo</p></div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button class="btn" onclick="imprimir()">🖨️ Gerar relatório (PDF)</button>
           <button class="btn sec" onclick="exportarCSV()">⬇️ Planilha (CSV)</button>
@@ -222,9 +224,9 @@
       <div class="podio" id="podio"></div>
       <div class="card">
         <h2>Classificação completa</h2>
-        <p class="ajuda">Entram as crianças ativas que já têm XP final preenchido.</p>
+        <p class="ajuda">Entram as crianças ativas que já têm a posição final preenchida. Critério: unidades avançadas; empate → casas; depois XP.</p>
         <div class="scroll"><table>
-          <thead><tr><th>#</th><th>Nome</th><th>XP inicial</th><th>XP final</th><th>XP ganho</th><th>Ofensiva</th></tr></thead>
+          <thead><tr><th>#</th><th>Nome</th><th>Início</th><th>Agora / fim</th><th>Avanço</th><th>XP ganho</th></tr></thead>
           <tbody id="ranking"></tbody>
         </table></div>
       </div>
@@ -270,39 +272,43 @@
     </div>
     <div class="modal-corpo">
       <div class="destaque">
-        <div><b id="mXpIni">—</b><span>XP inicial</span></div>
-        <div><b id="mXpFim">—</b><span>XP final</span></div>
-        <div class="g"><b id="mGanho">—</b><span>XP ganho</span></div>
+        <div><b id="mIni">—</b><span>Início</span></div>
+        <div><b id="mFim">—</b><span>Agora / fim</span></div>
+        <div class="g"><b id="mAvanco">—</b><span>Avanço</span></div>
       </div>
 
       <div class="secao">Informações</div>
       <div class="grid">
         <div><label>Nome</label><input data-c="nome"></div>
-        <div><label>Usuário do Duolingo</label><input data-c="usuario"></div>
         <div><label>Idade</label><input data-c="idade" type="number"></div>
         <div><label>Curso / idioma</label><input data-c="curso"></div>
         <div><label>Responsável</label><input data-c="resp"></div>
         <div><label>Telefone</label><input data-c="tel"></div>
+        <div><label>Usuário do Duolingo</label><input data-c="usuario"></div>
       </div>
 
       <div class="secao">Início do desafio</div>
-      <div class="grid">
-        <div><label>XP inicial</label><input data-c="xpIni" type="number"></div>
-        <div><label>Ofensiva inicial</label><input data-c="ofIni" type="number"></div>
-      </div>
+        <div class="grid">
+          <div><label>Seção</label><input data-c="iS" type="number" min="1" placeholder="Ex.: 1"></div>
+          <div><label>Unidade</label><input data-c="iU" type="number" min="1" placeholder="Ex.: 3"></div>
+          <div><label>Casa (lição na unidade)</label><input data-c="iC" type="number" min="0" placeholder="Ex.: 4"></div>
+          <div><label>XP total (opcional)</label><input data-c="iX" type="number" min="0" placeholder="Ex.: 1250"></div>
+        </div>
 
-      <div class="secao">Fim do desafio</div>
-      <div class="grid">
-        <div><label>XP final</label><input data-c="xpFim" type="number"></div>
-        <div><label>Ofensiva final</label><input data-c="ofFim" type="number"></div>
-      </div>
+      <div class="secao">Posição atual / fim do desafio</div>
+        <div class="grid">
+          <div><label>Seção</label><input data-c="fS" type="number" min="1" placeholder="Ex.: 1"></div>
+          <div><label>Unidade</label><input data-c="fU" type="number" min="1" placeholder="Ex.: 3"></div>
+          <div><label>Casa (lição na unidade)</label><input data-c="fC" type="number" min="0" placeholder="Ex.: 4"></div>
+          <div><label>XP total (opcional)</label><input data-c="fX" type="number" min="0" placeholder="Ex.: 1250"></div>
+        </div>
 
       <div class="secao">Observações</div>
-      <input data-c="obs" placeholder="Ex.: mandou o usuário dia 20/11">
+      <input data-c="obs" placeholder="Ex.: conferido pessoalmente dia 20/11">
     </div>
     <div class="modal-rodape">
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a id="mPerfil" target="_blank" rel="noopener"><button class="btn sec peq">🦉 Ver perfil no Duolingo</button></a>
+        <a id="mPerfil" target="_blank" rel="noopener"><button class="btn sec peq">🦉 Perfil no Duolingo</button></a>
         <button class="btn sec peq" id="mFora" onclick="alternarFora()"></button>
       </div>
       <button class="btn perigo peq" onclick="remover()">Remover</button>
@@ -311,7 +317,7 @@
 </div>
 
 <script>
-const CHAVE = "desafioDuolingoMadeirol_v1";
+const CHAVE = "desafioDuolingoMadeirol_v2";
 let dados = { inicio:"", fim:"", criancas:[] };
 let filtro = "todas", aberto = null;
 
@@ -321,16 +327,34 @@ const num = v => (v === "" || v == null || isNaN(Number(v))) ? null : Number(v);
 const fmt = v => v == null ? "—" : Number(v).toLocaleString("pt-BR");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmtData = d => d ? d.split("-").reverse().join("/") : "—";
-const iniciais = n => n.trim().split(/\s+/).slice(0,2).map(p => p[0]).join("").toUpperCase();
+const iniciais = n => (n || "?").trim().split(/\s+/).slice(0,2).map(p => p[0]).join("").toUpperCase();
 const cor = id => CORES[[...id].reduce((s,c) => s + c.charCodeAt(0), 0) % CORES.length];
 
 function carregar(){ try{ const s = localStorage.getItem(CHAVE); if(s) dados = JSON.parse(s); }catch(e){} dados.criancas = dados.criancas || []; }
 function salvar(){ try{ localStorage.setItem(CHAVE, JSON.stringify(dados)); }catch(e){} }
 
-function status(c){ if(c.fora) return "fora"; return (c.usuario && num(c.xpIni) !== null) ? "ativo" : "pendente"; }
+/* posição no caminho: Seção / Unidade / Casa */
+const temPos = (c, p) => num(c[p + "U"]) !== null;
+const posTxt = (c, p) => temPos(c, p)
+  ? (num(c[p + "S"]) !== null ? "S" + c[p + "S"] + " · " : "") + "Unid. " + c[p + "U"] + (num(c[p + "C"]) !== null ? " · Casa " + c[p + "C"] : "")
+  : "—";
+function avanco(c){
+  if(!temPos(c,"i") || !temPos(c,"f")) return null;
+  return {
+    u: num(c.fU) - num(c.iU),
+    c: (num(c.fC) || 0) - (num(c.iC) || 0),
+    xp: (num(c.fX) !== null && num(c.iX) !== null) ? num(c.fX) - num(c.iX) : null
+  };
+}
+function avancoTxt(a){
+  if(!a) return "—";
+  if(a.u === 0) return (a.c > 0 ? "+" : "") + a.c + (Math.abs(a.c) === 1 ? " casa" : " casas");
+  return (a.u > 0 ? "+" : "") + a.u + (Math.abs(a.u) === 1 ? " unidade" : " unidades");
+}
+const xpTxt = a => (!a || a.xp === null) ? "—" : (a.xp > 0 ? "+" : "") + fmt(a.xp);
+
+function status(c){ if(c.fora) return "fora"; return temPos(c,"i") ? "ativo" : "pendente"; }
 const NOME_ST = { ativo:"Ativa", pendente:"Pendente", fora:"Não participa" };
-function ganho(c){ const a = num(c.xpIni), b = num(c.xpFim); return (a !== null && b !== null) ? b - a : null; }
-const fmtGanho = g => g == null ? "—" : (g > 0 ? "+" : "") + fmt(g);
 
 /* ---------- abas ---------- */
 function irPara(aba){
@@ -347,6 +371,7 @@ document.querySelectorAll(".chip").forEach(ch => ch.onclick = () => {
 $("busca").oninput = renderPainel;
 
 /* ---------- cadastro ---------- */
+const CAMPOS_CAD = ["fNome","fUser","fIdade","fResp","fTel","fCurso","fIS","fIU","fIC","fIX"];
 function adicionar(){
   const nome = $("fNome").value.trim();
   if(!nome){ $("fNome").focus(); return; }
@@ -354,9 +379,10 @@ function adicionar(){
     id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
     nome, usuario: $("fUser").value.trim().replace(/^@/,""), idade: $("fIdade").value,
     resp: $("fResp").value.trim(), tel: $("fTel").value.trim(), curso: $("fCurso").value.trim(),
-    xpIni: $("fXpIni").value, ofIni: $("fOfIni").value, xpFim:"", ofFim:"", obs:"", fora:false
+    iS: $("fIS").value, iU: $("fIU").value, iC: $("fIC").value, iX: $("fIX").value,
+    fS:"", fU:"", fC:"", fX:"", obs:"", fora:false
   });
-  ["fNome","fUser","fIdade","fResp","fTel","fCurso","fXpIni","fOfIni"].forEach(i => $(i).value = "");
+  CAMPOS_CAD.forEach(i => $(i).value = "");
   salvar(); render(); irPara("painel");
 }
 
@@ -383,20 +409,20 @@ function renderPainel(){
   if(!lista.length){ $("painel").innerHTML = `<div class="vazio" style="grid-column:1/-1">Ninguém encontrado com esse filtro.</div>`; return; }
 
   $("painel").innerHTML = lista.map(c => {
-    const s = status(c);
+    const s = status(c), a = avanco(c);
     return `<div class="pessoa" onclick="abrir('${c.id}')">
       <span class="ponto ${s}" title="${NOME_ST[s]}"></span>
       <div class="linha1">
         <div class="avatar" style="background:${cor(c.id)}">${esc(iniciais(c.nome))}</div>
         <div style="min-width:0;padding-right:18px">
           <div class="nome">${esc(c.nome)}</div>
-          <div class="user">${c.usuario ? "@" + esc(c.usuario) : "sem usuário"}</div>
+          <div class="user">${c.idade ? esc(c.idade) + " anos" : ""}${c.idade && c.curso ? " · " : ""}${esc(c.curso || "")}</div>
         </div>
       </div>
       <div class="mini-stats">
-        <div><b>${fmt(num(c.xpIni))}</b><span>XP ini.</span></div>
-        <div><b>${fmtGanho(ganho(c))}</b><span>Ganho</span></div>
-        <div><b>🔥 ${esc(c.ofFim || c.ofIni || "—")}</b><span>Ofensiva</span></div>
+        <div><b>${temPos(c,"i") ? "U" + esc(c.iU) : "—"}</b><span>Início</span></div>
+        <div><b>${temPos(c,"f") ? "U" + esc(c.fU) : "—"}</b><span>Agora</span></div>
+        <div><b>${a ? (a.u === 0 ? (a.c>0?"+":"") + a.c + "c" : (a.u>0?"+":"") + a.u + "u") : "—"}</b><span>Avanço</span></div>
       </div>
       <span class="status-txt ${s}">${NOME_ST[s]}</span>
     </div>`;
@@ -412,15 +438,16 @@ function abrir(id){
   $("modal").classList.add("on");
 }
 function preencherModal(c){
-  const s = status(c);
-  $("mAvatar").textContent = iniciais(c.nome || "?");
+  const s = status(c), a = avanco(c);
+  $("mAvatar").textContent = iniciais(c.nome);
   $("mAvatar").style.background = cor(c.id);
   $("mNome").textContent = c.nome;
   $("mStatus").className = "status-txt " + s;
   $("mStatus").textContent = (s === "ativo" ? "🟢 " : s === "pendente" ? "🟡 " : "🔴 ") + NOME_ST[s];
-  $("mXpIni").textContent = fmt(num(c.xpIni));
-  $("mXpFim").textContent = fmt(num(c.xpFim));
-  $("mGanho").textContent = fmtGanho(ganho(c));
+  $("mIni").textContent = posTxt(c,"i");
+  $("mFim").textContent = posTxt(c,"f");
+  $("mAvanco").textContent = avancoTxt(a);
+  [$("mIni"), $("mFim")].forEach(e => e.style.fontSize = "16px");
   $("mFora").textContent = c.fora ? "↩️ Voltar a participar" : "🚫 Marcar como não participa";
   const p = $("mPerfil");
   if(c.usuario){ p.href = "https://www.duolingo.com/profile/" + encodeURIComponent(c.usuario); p.style.display = ""; }
@@ -449,19 +476,20 @@ function remover(){
 
 /* ---------- ranking ---------- */
 function rankingLista(){
-  return dados.criancas.filter(c => status(c) === "ativo" && ganho(c) !== null)
-    .sort((a,b) => (ganho(b) - ganho(a)) || ((num(b.ofFim)||0) - (num(a.ofFim)||0)));
+  return dados.criancas.filter(c => status(c) === "ativo" && avanco(c))
+    .sort((a,b) => { const A = avanco(a), B = avanco(b);
+      return (B.u - A.u) || (B.c - A.c) || ((B.xp || 0) - (A.xp || 0)); });
 }
 function renderRanking(){
   const r = rankingLista();
   const deg = (c, med, cls) => c ? `<div class="degrau ${cls}" onclick="abrir('${c.id}')" style="cursor:pointer">
-      <div class="med">${med}</div><div class="nome">${esc(c.nome)}</div><div class="xp">${fmtGanho(ganho(c))} XP</div></div>`
+      <div class="med">${med}</div><div class="nome">${esc(c.nome)}</div><div class="xp">${avancoTxt(avanco(c))}</div></div>`
     : `<div class="degrau ${cls}" style="opacity:.45"><div class="med">${med}</div><div class="nome">—</div></div>`;
   $("podio").innerHTML = deg(r[1],"🥈","p2") + deg(r[0],"🥇","p1") + deg(r[2],"🥉","p3");
-  $("ranking").innerHTML = r.length ? r.map((c,i) => `<tr style="cursor:pointer" onclick="abrir('${c.id}')">
-      <td>${i+1}º</td><td>${esc(c.nome)}</td><td>${fmt(num(c.xpIni))}</td><td>${fmt(num(c.xpFim))}</td>
-      <td class="ganho">${fmtGanho(ganho(c))}</td><td>🔥 ${esc(c.ofFim || "—")}</td></tr>`).join("")
-    : `<tr><td colspan="6" class="vazio">O ranking aparece quando as crianças ativas tiverem o XP final preenchido.</td></tr>`;
+  $("ranking").innerHTML = r.length ? r.map((c,i) => { const a = avanco(c); return `<tr style="cursor:pointer" onclick="abrir('${c.id}')">
+      <td>${i+1}º</td><td>${esc(c.nome)}</td><td>${posTxt(c,"i")}</td><td>${posTxt(c,"f")}</td>
+      <td class="ganho">${avancoTxt(a)}</td><td>${xpTxt(a)}</td></tr>`; }).join("")
+    : `<tr><td colspan="6" class="vazio">O ranking aparece quando as crianças ativas tiverem a posição atual/final preenchida.</td></tr>`;
 }
 
 function render(){ renderResumo(); renderPainel(); renderRanking(); }
@@ -470,23 +498,21 @@ function render(){ renderResumo(); renderPainel(); renderRanking(); }
 function imprimir(){
   const r = rankingLista();
   const ativas = dados.criancas.filter(c => status(c) === "ativo");
-  const semFim = ativas.filter(c => ganho(c) === null);
-  const total = r.reduce((s,c) => s + ganho(c), 0);
+  const semFim = ativas.filter(c => !avanco(c));
+  const linhaPodio = (c, m) => m + " " + (c ? esc(c.nome) + " (" + avancoTxt(avanco(c)) + ")" : "—");
   $("relatorio").innerHTML = `
     <h1 style="margin:0">Relatório – Desafio Duolingo Madeirol</h1>
     <p style="color:#555">Período: ${fmtData(dados.inicio)} a ${fmtData(dados.fim)} · Gerado em ${new Date().toLocaleDateString("pt-BR")}</p>
-    <p><b>${dados.criancas.length}</b> cadastradas · <b>${ativas.length}</b> participaram · <b>${r.length}</b> avaliadas · XP total ganho pelo grupo: <b>${fmt(total)}</b></p>
+    <p><b>${dados.criancas.length}</b> cadastradas · <b>${ativas.length}</b> participaram · <b>${r.length}</b> avaliadas</p>
     <h2>Pódio</h2>
-    <p style="font-size:18px">🥇 ${r[0] ? esc(r[0].nome) + " (" + fmtGanho(ganho(r[0])) + " XP)" : "—"}<br>
-    🥈 ${r[1] ? esc(r[1].nome) + " (" + fmtGanho(ganho(r[1])) + " XP)" : "—"}<br>
-    🥉 ${r[2] ? esc(r[2].nome) + " (" + fmtGanho(ganho(r[2])) + " XP)" : "—"}</p>
+    <p style="font-size:18px">${linhaPodio(r[0],"🥇")}<br>${linhaPodio(r[1],"🥈")}<br>${linhaPodio(r[2],"🥉")}</p>
     <h2>Classificação completa</h2>
     <table border="1" cellpadding="6" style="border-collapse:collapse;width:100%">
-      <thead><tr><th>#</th><th>Nome</th><th>Usuário</th><th>XP inicial</th><th>XP final</th><th>XP ganho</th><th>Ofensiva final</th></tr></thead><tbody>
-      ${r.map((c,i) => `<tr><td>${i+1}º</td><td>${esc(c.nome)}</td><td>${esc(c.usuario)}</td><td>${fmt(num(c.xpIni))}</td><td>${fmt(num(c.xpFim))}</td><td><b>${fmtGanho(ganho(c))}</b></td><td>${esc(c.ofFim || "—")}</td></tr>`).join("") || `<tr><td colspan="7">Sem dados finais.</td></tr>`}
+      <thead><tr><th>#</th><th>Nome</th><th>Início</th><th>Fim</th><th>Avanço</th><th>XP ganho</th></tr></thead><tbody>
+      ${r.map((c,i) => { const a = avanco(c); return `<tr><td>${i+1}º</td><td>${esc(c.nome)}</td><td>${posTxt(c,"i")}</td><td>${posTxt(c,"f")}</td><td><b>${avancoTxt(a)}</b></td><td>${xpTxt(a)}</td></tr>`; }).join("") || `<tr><td colspan="6">Sem dados finais.</td></tr>`}
     </tbody></table>
-    ${semFim.length ? `<p style="color:#8a6a00">Ativas sem XP final (não avaliadas): ${semFim.map(c => esc(c.nome)).join(", ")}</p>` : ""}
-    <p style="font-size:12px;color:#777;margin-top:24px">Critério: XP ganho no período (XP final − XP inicial). Desempate pela ofensiva final.</p>`;
+    ${semFim.length ? `<p style="color:#8a6a00">Ativas sem posição final (não avaliadas): ${semFim.map(c => esc(c.nome)).join(", ")}</p>` : ""}
+    <p style="font-size:12px;color:#777;margin-top:24px">Critério: quem avançou mais unidades no caminho do Duolingo; empate decidido pelas casas e depois pelo XP.</p>`;
   window.print();
 }
 function baixar(nome, conteudo, tipo){
@@ -495,9 +521,9 @@ function baixar(nome, conteudo, tipo){
   a.download = nome; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 function exportarCSV(){
-  const L = [["Nome","Usuário","Idade","Curso","Responsável","Telefone","Status","XP inicial","Ofensiva inicial","XP final","Ofensiva final","XP ganho","Observações"]];
-  dados.criancas.forEach(c => { const g = ganho(c);
-    L.push([c.nome,c.usuario,c.idade,c.curso,c.resp,c.tel,NOME_ST[status(c)],c.xpIni,c.ofIni,c.xpFim,c.ofFim,g ?? "",c.obs]); });
+  const L = [["Nome","Idade","Curso","Responsável","Telefone","Usuário","Status","Seção ini.","Unidade ini.","Casa ini.","XP ini.","Seção fim","Unidade fim","Casa fim","XP fim","Unidades avançadas","Casas (dif.)","XP ganho","Observações"]];
+  dados.criancas.forEach(c => { const a = avanco(c);
+    L.push([c.nome,c.idade,c.curso,c.resp,c.tel,c.usuario,NOME_ST[status(c)],c.iS,c.iU,c.iC,c.iX,c.fS,c.fU,c.fC,c.fX,a?a.u:"",a?a.c:"",a&&a.xp!==null?a.xp:"",c.obs]); });
   baixar("desafio-duolingo.csv", "﻿" + L.map(l => l.map(v => `"${String(v ?? "").replace(/"/g,'""')}"`).join(";")).join("\n"), "text/csv;charset=utf-8");
 }
 function exportarJSON(){ baixar("backup-desafio-duolingo-" + new Date().toISOString().slice(0,10) + ".json", JSON.stringify(dados, null, 2), "application/json"); }
