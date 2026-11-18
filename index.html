@@ -22,6 +22,7 @@
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 <style>
   [hidden]{display:none!important}
   :root{
@@ -312,6 +313,22 @@
     main{padding:26px 16px 60px}
     .stats{grid-template-columns:repeat(2,1fr)}
   }
+
+  /* ---------- resumo ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:18px}
+  .kpi{background:#fff;border:1px solid #efe6dc;border-radius:16px;padding:18px 18px 16px;box-shadow:0 18px 40px rgba(74,41,26,.06)}
+  .kpi b{display:block;font-size:30px;font-weight:300;color:#4a291a;line-height:1}
+  .kpi span{display:block;margin-top:8px;font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#8a7566}
+  .kpi small{display:block;margin-top:4px;font-size:11px;color:#a08e80}
+  .grade2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .barra{display:grid;grid-template-columns:120px 1fr 44px;align-items:center;gap:12px;padding:7px 0;font-size:13px}
+  .barra .rot{color:#3a2216;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .barra .trilho{height:10px;background:#f3ebe3;border-radius:99px;overflow:hidden}
+  .barra .enche{display:block;height:100%;background:#4a291a;border-radius:99px}
+  .barra .qtd{text-align:right;font-weight:700;color:#4a291a}
+  .barra .qtd small{display:block;font-weight:400;color:#a08e80;font-size:10px}
+  @media (max-width:1100px){ .kpis{grid-template-columns:repeat(3,1fr)} }
+  @media (max-width:860px){ .kpis{grid-template-columns:repeat(2,1fr)} .grade2{grid-template-columns:1fr} .barra{grid-template-columns:90px 1fr 40px} }
 </style>
 </head>
 <body>
@@ -417,6 +434,7 @@
   <div class="navbar">
     <nav>
       <button data-aba="painel" class="on">Inscritos</button>
+      <button data-aba="resumo">Resumo</button>
       <button data-aba="ranking">Ranking</button>
       <button data-aba="envios">Progressos</button>
     </nav>
@@ -461,6 +479,34 @@
           <thead><tr><th>#</th><th>Nome</th><th>Início</th><th>Atual</th><th>Avanço</th></tr></thead>
           <tbody id="ranking"></tbody>
         </table></div>
+      </div>
+    </section>
+
+    <section class="aba" id="aba-resumo">
+      <div class="topo">
+        <div><h1>Resumo do <b>desafio</b></h1><p>Tudo o que seu chefe pode perguntar, num lugar só.</p></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" onclick="baixarExcel()">Planilha (Excel)</button>
+          <button class="btn sec" onclick="baixarWord()">Word</button>
+          <button class="btn sec" onclick="copiarResumo()">Copiar texto</button>
+          <button class="btn sec" onclick="imprimirResumo()">PDF</button>
+        </div>
+      </div>
+      <p class="ajuda" id="avisoCopia" style="margin:-14px 0 18px"></p>
+      <div class="kpis" id="kpis"></div>
+      <div class="grade2">
+        <div class="card"><h2>Participantes por idade</h2><div id="porIdade"></div></div>
+        <div class="card"><h2>Por faixa etária</h2><div id="porFaixa"></div>
+          <div class="secao" style="margin-top:26px">Já usavam o Duolingo?</div><div id="porJaUsa"></div></div>
+      </div>
+      <div class="grade2">
+        <div class="card"><h2>Por funcionário(a) da Madeirol</h2><div id="porFunc"></div></div>
+        <div class="card"><h2>Inscrições por dia</h2><div id="porDia"></div></div>
+      </div>
+      <div class="card">
+        <h2>Lista completa</h2>
+        <p class="ajuda">Todos os inscritos, em ordem alfabética.</p>
+        <div class="scroll"><table id="tabCompleta"></table></div>
       </div>
     </section>
 
@@ -715,7 +761,148 @@ document.querySelectorAll(".chip").forEach(ch => ch.onclick = () => {
 });
 $("busca").oninput = () => renderPainel();
 
-function render(){ renderResumo(); renderPainel(); renderRanking(); renderEnvios(); }
+
+/* ======================= RESUMO ======================= */
+const ativos = () => inscricoes.filter(c => !c.fora);
+function contar(lista, chave){
+  const m = new Map();
+  lista.forEach(c => { const k = chave(c); m.set(k, (m.get(k) || 0) + 1); });
+  return [...m.entries()];
+}
+const FAIXAS = [["Até 9 anos",0,9],["10 a 12 anos",10,12],["13 a 15 anos",13,15],["16 e 17 anos",16,17],["18 anos ou mais",18,200]];
+function dadosResumo(){
+  const L = ativos();
+  const idades = L.map(c => num(c.idade)).filter(v => v !== null);
+  const media = idades.length ? (idades.reduce((a,b) => a+b, 0) / idades.length) : null;
+  const porIdade = contar(L.filter(c => num(c.idade) !== null), c => num(c.idade)).sort((a,b) => a[0]-b[0]);
+  const semIdade = L.filter(c => num(c.idade) === null).length;
+  const porFaixa = FAIXAS.map(([n,a,b]) => [n, L.filter(c => { const i = num(c.idade); return i !== null && i >= a && i <= b; }).length]);
+  const porJaUsa = [["Sim", L.filter(c => norm(c.ja_usa) === "sim").length], ["Não", L.filter(c => norm(c.ja_usa) === "nao").length]];
+  const porFunc = contar(L, c => (c.funcionario || "").trim() || "Não informado").sort((a,b) => b[1]-a[1] || String(a[0]).localeCompare(String(b[0]),"pt-BR"));
+  const porDia = contar(L, c => c.criado_em ? new Date(c.criado_em).toLocaleDateString("pt-BR") : "—")
+    .sort((a,b) => a[0].split("/").reverse().join("").localeCompare(b[0].split("/").reverse().join("")));
+  return {
+    total: L.length, foraTotal: inscricoes.length - L.length,
+    menores: L.filter(c => num(c.idade) !== null && num(c.idade) < 18).length,
+    maiores: L.filter(c => num(c.idade) !== null && num(c.idade) >= 18).length,
+    media, min: idades.length ? Math.min(...idades) : null, max: idades.length ? Math.max(...idades) : null,
+    conferidos: L.filter(c => c.conferido).length, comPrint: L.filter(c => c.foto_inicio).length,
+    jaUsavam: porJaUsa[0][1], porIdade, semIdade, porFaixa, porJaUsa, porFunc, porDia, lista: [...L].sort((a,b) => a.nome.localeCompare(b.nome,"pt-BR"))
+  };
+}
+const pct = (n, t) => t ? Math.round(n * 100 / t) + "%" : "0%";
+function barras(pares, total, sufixo){
+  if(!pares.length || !total) return `<div class="vazio" style="padding:20px">Sem dados ainda.</div>`;
+  const max = Math.max(...pares.map(p => p[1]), 1);
+  return pares.map(([k,v]) => `<div class="barra"><span class="rot" title="${esc(k)}">${esc(k)}${sufixo || ""}</span>
+    <span class="trilho"><span class="enche" style="width:${(v / max * 100).toFixed(1)}%"></span></span>
+    <span class="qtd">${v}<small>${pct(v,total)}</small></span></div>`).join("");
+}
+const fmtMedia = m => m === null ? "—" : m.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+function renderResumoTela(){
+  if(!$("kpis")) return;
+  const d = dadosResumo();
+  const k = (v, r, s) => `<div class="kpi"><b>${v}</b><span>${r}</span>${s ? `<small>${s}</small>` : ""}</div>`;
+  $("kpis").innerHTML =
+    k(d.total, "Participantes", d.foraTotal ? d.foraTotal + " fora do desafio" : "") +
+    k(d.menores, "Menores de 18", pct(d.menores, d.total) + " do total") +
+    k(d.maiores, "18 anos ou mais", pct(d.maiores, d.total) + " do total") +
+    k(fmtMedia(d.media), "Idade média", d.min !== null ? `de ${d.min} a ${d.max} anos` : "") +
+    k(d.jaUsavam, "Já usavam Duolingo", pct(d.jaUsavam, d.total) + " do total") +
+    k(d.conferidos, "Print conferido", `${d.comPrint} enviaram print`);
+  $("porIdade").innerHTML = barras(d.porIdade.map(([i,v]) => [i + " anos", v]), d.total) + (d.semIdade ? `<p class="ajuda" style="margin-top:8px">${d.semIdade} sem idade informada.</p>` : "");
+  $("porFaixa").innerHTML = barras(d.porFaixa, d.total);
+  $("porJaUsa").innerHTML = barras(d.porJaUsa, d.total);
+  $("porFunc").innerHTML = barras(d.porFunc, d.total);
+  $("porDia").innerHTML = barras(d.porDia, d.total);
+  $("tabCompleta").innerHTML = `<thead><tr><th>#</th><th>Nome</th><th>Idade</th><th>Responsável</th><th>WhatsApp</th><th>Funcionário(a)</th><th>Já usava</th><th>Status</th></tr></thead><tbody>` +
+    (d.lista.map((c,i) => `<tr style="cursor:pointer" onclick="abrir('${c.id}')"><td>${i+1}</td><td>${esc(c.nome)}</td><td>${esc(c.idade ?? "—")}</td><td>${esc(c.responsavel || "—")}</td><td>${esc(c.telefone || "—")}</td><td>${esc(c.funcionario || "—")}</td><td>${esc(c.ja_usa || "—")}</td><td>${NOME_ST[status(c)]}</td></tr>`).join("")
+     || `<tr><td colspan="8" class="vazio">Nenhum inscrito ainda.</td></tr>`) + `</tbody>`;
+}
+function textoResumo(){
+  const d = dadosResumo(), hoje = new Date().toLocaleDateString("pt-BR");
+  const linhas = (pares, suf) => pares.map(([k,v]) => `• ${k}${suf || ""}: ${v} (${pct(v,d.total)})`).join("\n");
+  return `DESAFIO DO DUOLINGO — MADEIROL
+Resumo em ${hoje}
+
+Participantes: ${d.total}${d.foraTotal ? ` (+ ${d.foraTotal} fora do desafio)` : ""}
+Menores de 18 anos: ${d.menores} (${pct(d.menores,d.total)})
+18 anos ou mais: ${d.maiores} (${pct(d.maiores,d.total)})
+Idade média: ${fmtMedia(d.media)} anos${d.min !== null ? ` (de ${d.min} a ${d.max})` : ""}
+Já usavam o Duolingo: ${d.jaUsavam} (${pct(d.jaUsavam,d.total)})
+Print conferido: ${d.conferidos} de ${d.total}
+
+POR IDADE
+${linhas(d.porIdade.map(([i,v]) => [i, v]), " anos") || "—"}
+
+POR FAIXA ETÁRIA
+${linhas(d.porFaixa)}
+
+POR FUNCIONÁRIO(A)
+${linhas(d.porFunc) || "—"}
+
+LISTA DE PARTICIPANTES
+${d.lista.map((c,i) => `${i+1}. ${c.nome} — ${c.idade ?? "?"} anos${c.responsavel ? " — resp.: " + c.responsavel : ""}${c.telefone ? " — " + c.telefone : ""}`).join("\n") || "—"}`;
+}
+async function copiarResumo(){
+  try{ await navigator.clipboard.writeText(textoResumo()); $("avisoCopia").textContent = "Texto copiado. É só colar no WhatsApp ou no e-mail."; }
+  catch(e){ $("avisoCopia").textContent = "Não consegui copiar automaticamente neste navegador."; }
+  setTimeout(() => $("avisoCopia").textContent = "", 4000);
+}
+function baixarArquivo(nome, conteudo, tipo){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(conteudo instanceof Blob ? conteudo : new Blob([conteudo], { type: tipo }));
+  a.download = nome; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+}
+const dataArq = () => new Date().toISOString().slice(0,10);
+function baixarExcel(){
+  const d = dadosResumo();
+  const inscritosAOA = [["Nome","Idade","Responsável","WhatsApp","Funcionário(a)","Já usava o Duolingo","Usuário no Duolingo","Inscrição em","Status","Unidade inicial","Unidade atual","Avanço (unidades)","Observações"]]
+    .concat(d.lista.map(c => { const a = atual(c), v = avanco(c);
+      return [c.nome, num(c.idade), c.responsavel || "", c.telefone || "", c.funcionario || "", c.ja_usa || "", c.usuario || "", c.criado_em ? new Date(c.criado_em).toLocaleString("pt-BR") : "", NOME_ST[status(c)], num(c.unidade), a ? num(a.u) : "", v ? v.u : "", c.obs || ""]; }));
+  const resumoAOA = [["Indicador","Valor"],["Participantes",d.total],["Fora do desafio",d.foraTotal],["Menores de 18",d.menores],["18 anos ou mais",d.maiores],
+    ["Idade média", d.media === null ? "" : Math.round(d.media*10)/10],["Idade mínima",d.min ?? ""],["Idade máxima",d.max ?? ""],["Já usavam o Duolingo",d.jaUsavam],["Print conferido",d.conferidos],["Enviaram print",d.comPrint]];
+  const idadeAOA = [["Idade","Participantes","%"]].concat(d.porIdade.map(([i,v]) => [i, v, d.total ? v/d.total : 0]));
+  const faixaAOA = [["Faixa etária","Participantes","%"]].concat(d.porFaixa.map(([f,v]) => [f, v, d.total ? v/d.total : 0]));
+  const funcAOA = [["Funcionário(a)","Participantes"]].concat(d.porFunc);
+  if(typeof XLSX === "undefined"){
+    const csv = "﻿" + inscritosAOA.map(l => l.map(x => `"${String(x ?? "").replace(/"/g,'""')}"`).join(";")).join("\n");
+    return baixarArquivo("desafio-duolingo-" + dataArq() + ".csv", csv, "text/csv;charset=utf-8");
+  }
+  const wb = XLSX.utils.book_new();
+  const add = (aoa, nome, larg) => { const ws = XLSX.utils.aoa_to_sheet(aoa); ws["!cols"] = larg.map(w => ({ wch: w }));
+    if(aoa[0].includes("%")) for(let r = 1; r < aoa.length; r++){ const ref = XLSX.utils.encode_cell({ r, c: 2 }); if(ws[ref]) ws[ref].z = "0%"; }
+    XLSX.utils.book_append_sheet(wb, ws, nome); };
+  add(resumoAOA, "Resumo", [26,12]);
+  add(inscritosAOA, "Inscritos", [30,7,26,18,26,12,18,18,16,10,10,10,30]);
+  add(idadeAOA, "Por idade", [10,14,8]);
+  add(faixaAOA, "Por faixa etária", [18,14,8]);
+  add(funcAOA, "Por funcionário", [30,14]);
+  XLSX.writeFile(wb, "desafio-duolingo-" + dataArq() + ".xlsx");
+}
+function htmlResumo(){
+  const d = dadosResumo(), hoje = new Date().toLocaleDateString("pt-BR");
+  const tab = (cab, linhas) => `<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;font-family:Arial;font-size:11pt;margin-bottom:14pt">
+    <tr>${cab.map(c => `<th style="background:#4a291a;color:#fff;text-align:left">${c}</th>`).join("")}</tr>
+    ${linhas.map(l => `<tr>${l.map(x => `<td>${esc(x)}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="${cab.length}">—</td></tr>`}</table>`;
+  return `<h1 style="font-family:Arial;color:#4a291a;margin:0">Desafio do Duolingo — Madeirol</h1>
+  <p style="font-family:Arial;color:#6b4a3a">Resumo gerado em ${hoje}</p>
+  <h2 style="font-family:Arial;color:#4a291a">Números gerais</h2>
+  ${tab(["Indicador","Valor"], [["Participantes", d.total],["Menores de 18 anos", `${d.menores} (${pct(d.menores,d.total)})`],["18 anos ou mais", `${d.maiores} (${pct(d.maiores,d.total)})`],
+    ["Idade média", fmtMedia(d.media) + (d.min !== null ? ` (de ${d.min} a ${d.max})` : "")],["Já usavam o Duolingo", `${d.jaUsavam} (${pct(d.jaUsavam,d.total)})`],["Print conferido", `${d.conferidos} de ${d.total}`]])}
+  <h2 style="font-family:Arial;color:#4a291a">Por idade</h2>${tab(["Idade","Participantes","%"], d.porIdade.map(([i,v]) => [i + " anos", v, pct(v,d.total)]))}
+  <h2 style="font-family:Arial;color:#4a291a">Por faixa etária</h2>${tab(["Faixa","Participantes","%"], d.porFaixa.map(([f,v]) => [f, v, pct(v,d.total)]))}
+  <h2 style="font-family:Arial;color:#4a291a">Por funcionário(a)</h2>${tab(["Funcionário(a)","Participantes"], d.porFunc)}
+  <h2 style="font-family:Arial;color:#4a291a">Lista de participantes</h2>
+  ${tab(["#","Nome","Idade","Responsável","WhatsApp","Funcionário(a)","Status"], d.lista.map((c,i) => [i+1, c.nome, c.idade ?? "—", c.responsavel || "—", c.telefone || "—", c.funcionario || "—", NOME_ST[status(c)]]))}`;
+}
+function baixarWord(){
+  const doc = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>Desafio do Duolingo</title></head><body>${htmlResumo()}</body></html>`;
+  baixarArquivo("desafio-duolingo-" + dataArq() + ".doc", "﻿" + doc, "application/msword");
+}
+function imprimirResumo(){ $("relatorio").innerHTML = htmlResumo(); window.print(); }
+
+function render(){ renderResumo(); renderPainel(); renderRanking(); renderEnvios(); renderResumoTela(); }
 function renderResumo(){
   const st = inscricoes.map(status);
   $("sTotal").textContent = st.length;
