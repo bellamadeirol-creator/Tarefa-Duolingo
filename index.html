@@ -329,6 +329,9 @@
   .barra .qtd small{display:block;font-weight:400;color:#a08e80;font-size:10px}
   @media (max-width:1100px){ .kpis{grid-template-columns:repeat(3,1fr)} }
   @media (max-width:860px){ .kpis{grid-template-columns:repeat(2,1fr)} .grade2{grid-template-columns:1fr} .barra{grid-template-columns:90px 1fr 40px} }
+
+  .intro p{margin:0 0 10px;font-size:14px;line-height:1.55;color:#3a2216}
+  .foto-box div{color:#4a291a}
 </style>
 </head>
 <body>
@@ -337,53 +340,49 @@
 
 <div id="vPublico" class="pub largo" hidden>
   <div class="pub-topo">
-    <h1>Desafio <b>Duolingo</b></h1>
-    <p>6 meses aprendendo um idioma — quem avançar mais casas ganha! 🏆</p>
+    <h1>Desafio do <b>Duolingo</b></h1>
   </div>
 
   <div class="tabs">
-    <button class="on" data-ptab="insc">📝 Inscrição</button>
-    <button data-ptab="prog">📈 Enviar progresso</button>
+    <button class="on" data-ptab="insc">Inscrição</button>
+    <button data-ptab="prog">Enviar progresso</button>
   </div>
 
   <!-- Inscrição -->
+  <div class="card intro">
+    <p><b>Prepare-se para aprender e evoluir!</b> 🤎</p>
+    <p>O Desafio Duolingo terá duração de <b>6 meses</b> e acompanhará o progresso dos participantes no aprendizado de <b>inglês</b>.</p>
+    <p>Para participar, preencha as informações abaixo e envie um print comprovando sua posição inicial no aplicativo.</p>
+    <p><b>Importante:</b> todos os participantes devem iniciar o desafio no começo do curso de inglês.</p>
+    <p class="ajuda" style="margin:0">Menores de 18 anos devem preencher junto com o responsável.</p>
+  </div>
   <form class="card" id="formInsc" autocomplete="on">
-    <h2>Inscrição</h2>
-    <p class="ajuda">Menores de 18 anos: preencha junto com o responsável. Só participa quem enviar a inscrição com o print.</p>
-    <div class="campo"><label>Nome completo do participante *</label><input name="nome" required maxlength="120"></div>
-    <div class="grid">
-      <div class="campo"><label>Idade *</label><input name="idade" type="number" min="2" max="99" required></div>
-      <div class="campo"><label>Idioma *</label>
-        <select name="idioma" required><option value="">Escolha...</option><option>Inglês</option><option>Espanhol</option><option>Francês</option><option>Italiano</option><option>Alemão</option><option>Outro</option></select></div>
-    </div>
-    <div class="campo"><label>Nome do responsável (se menor de 18)</label><input name="responsavel" maxlength="120"></div>
-    <div class="campo"><label>WhatsApp para contato *</label><input name="telefone" type="tel" required maxlength="30" placeholder="(21) 9...."></div>
+    <h2>Dados do participante</h2>
+    <div class="campo"><label>Nome do participante *</label><input name="nome" required maxlength="120"></div>
+    <div class="campo"><label>Idade do participante *</label><input name="idade" type="number" inputmode="numeric" min="2" max="99" required></div>
+    <div class="campo"><label>Nome do responsável (se menor de 18 anos)</label><input name="responsavel" maxlength="120"></div>
+    <div class="campo"><label>WhatsApp para contato *</label><input name="telefone" type="tel" required maxlength="30" placeholder="(21) 99999-9999"></div>
     <div class="campo"><label>Funcionário(a) da Madeirol ligado ao participante</label><input name="funcionario" maxlength="120" placeholder="Ex.: Pablo (pai)"></div>
-    <div class="grid">
-      <div class="campo"><label>Já usava o Duolingo? *</label><select name="ja_usa" required><option value="">Escolha...</option><option>Não</option><option>Sim</option></select></div>
-      <div class="campo"><label>Usuário no Duolingo</label><input name="usuario" maxlength="60" placeholder="opcional"></div>
+
+    <div class="secao">Sobre o Duolingo</div>
+    <div class="campo"><label>Já usava o Duolingo antes? *</label><select name="ja_usa" required><option value="">Escolha...</option><option>Não</option><option>Sim</option></select></div>
+    <div class="campo"><label>Nome de usuário no Duolingo</label><input name="usuario" maxlength="60" placeholder="Opcional — aparece no Perfil do app"></div>
+
+    <div class="secao">Autorização</div>
+    <div class="campo">
+      <label class="check" style="text-transform:none;letter-spacing:0;color:var(--texto);font-size:13px;font-weight:400"><input type="checkbox" name="autorizado" required>
+      Autorizo a participação no Desafio do Duolingo e o uso destas informações pela Madeirol apenas para este desafio (se menor de 18 anos, autorização do responsável).</label>
     </div>
 
-    <div class="secao">Onde você está hoje no Duolingo</div>
-    <div class="dica">Abra o Duolingo na tela de lições. No topo aparece a <b>Seção</b> e a <b>Unidade</b>. A <b>casa</b> é a bolinha onde você está dentro da unidade (contando de cima pra baixo). Quem está começando agora: Seção 1, Unidade 1, Casa 1.</div>
-    <div class="linha3">
-      <div class="campo"><label>Seção *</label><input name="secao" type="number" min="0" max="50" required></div>
-      <div class="campo"><label>Unidade *</label><input name="unidade" type="number" min="0" max="500" required></div>
-      <div class="campo"><label>Casa *</label><input name="casa" type="number" min="0" max="50" required></div>
-    </div>
-
-    <div class="secao">Print do início *</div>
+    <div class="secao">Print da posição inicial *</div>
+    <p class="ajuda" style="margin:-4px 0 10px">Abra o Duolingo no curso de inglês, na tela de lições, e mostre que você está no começo do curso. Tire a foto na hora ou escolha da galeria.</p>
     <label class="foto-box" for="fotoInsc" style="text-transform:none;letter-spacing:0">
-      <div id="fotoInscTxt" style="font-size:15px;color:var(--verde-esc);font-weight:900">📷 Toque para anexar o print da tela do Duolingo</div>
+      <div id="fotoInscTxt" style="font-size:14px;font-weight:700">Toque para tirar a foto ou escolher da galeria</div>
       <img id="fotoInscPrev" hidden alt="">
     </label>
     <input type="file" id="fotoInsc" accept="image/*" hidden>
 
-    <div class="campo" style="margin-top:18px">
-      <label class="check" style="text-transform:none;letter-spacing:0;color:var(--texto)"><input type="checkbox" name="autorizado" required>
-      Autorizo a participação no Desafio Duolingo e o uso destas informações pela Madeirol apenas para este desafio (se menor de 18, autorização do responsável).</label>
-    </div>
-    <button class="btn full" type="submit" id="btnInsc">Enviar inscrição</button>
+    <button class="btn full" type="submit" id="btnInsc" style="margin-top:20px">Enviar inscrição</button>
     <div class="msg-erro" id="erroInsc"></div>
   </form>
 
@@ -527,7 +526,7 @@
       <button class="fechar" onclick="document.getElementById('modalZap').classList.remove('on')">✕</button></div>
     <div class="modal-corpo">
       <label>Link do formulário</label>
-      <input id="linkForm" placeholder="Cole aqui o link do Google Forms (o de ENVIAR)" oninput="salvarLinkForm()">
+      <input id="linkForm" readonly onclick="this.select()">
       <div class="secao">Mensagem</div>
       <textarea id="msgZap" rows="12"></textarea>
       <div class="acoes">
@@ -658,14 +657,14 @@ $("formInsc").onsubmit = async e => {
   try{
     const foto = await enviarFoto(fotos.insc, "inicio");
     const { error } = await sb.from("duo_inscricoes").insert({
-      nome: valForm(f,"nome"), idade: num(valForm(f,"idade")), idioma: valForm(f,"idioma"),
+      nome: valForm(f,"nome"), idade: num(valForm(f,"idade")), idioma: "Inglês",
       responsavel: valForm(f,"responsavel"), telefone: valForm(f,"telefone"), funcionario: valForm(f,"funcionario"),
       ja_usa: valForm(f,"ja_usa"), usuario: (valForm(f,"usuario") || "").replace(/^@/,"") || null,
-      secao: num(valForm(f,"secao")), unidade: num(valForm(f,"unidade")), casa: num(valForm(f,"casa")),
+      secao: 1, unidade: 1, casa: 1,
       foto_inicio: foto, autorizado: f.elements.autorizado.checked
     });
     if(error) throw error;
-    f.reset(); fotos.insc = null; $("fotoInscPrev").hidden = true; $("fotoInscTxt").textContent = "📷 Toque para anexar o print da tela do Duolingo";
+    f.reset(); fotos.insc = null; $("fotoInscPrev").hidden = true; $("fotoInscTxt").textContent = "Toque para tirar a foto ou escolher da galeria";
     sucesso("Inscrição enviada! 🎉", "Agora é só estudar todo dia no Duolingo. Boa sorte! 🍀");
   }catch(err){
     console.error(err);
@@ -1027,17 +1026,17 @@ function renderEnvios(){
 
 /* ---------- divulgar ---------- */
 function prepararDivulgar(){
-  let link = ""; try{ link = localStorage.getItem("duoLinkForm") || ""; }catch(e){}
-  $("linkForm").value = link; $("abrirForm").href = link || "#";
+  const link = location.origin + location.pathname + "?form";
+  $("linkForm").value = link; $("abrirForm").href = link;
   $("msgZap").value =
 `🏆 *Desafio Duolingo Madeirol* 🏆
 
-Olá, pessoal! A Madeirol está lançando um desafio para incentivar o aprendizado de um novo idioma com o Duolingo! 📚
+Olá, pessoal! A Madeirol está lançando o *Desafio do Duolingo*, para incentivar o aprendizado de inglês! 📚
 
 Durante *6 meses* os participantes usam o app e, no final, vamos ver *quem avançou mais casas*. 🏆
 
-Para participar, preencha o formulário e anexe um print da tela do Duolingo mostrando onde você está (menores de 18, com o responsável):
-👉 ${link || "[cole o link do formulário]"}
+Importante: todos começam no início do curso de inglês. Para participar, preencha o formulário e envie o print da posição inicial (menores de 18, com o responsável):
+👉 ${link}
 
 ⚠️ Só participa quem enviar a inscrição com o print.`;
 }
@@ -1081,3 +1080,4 @@ function exportarCSV(){
 </script>
 </body>
 </html>
+
